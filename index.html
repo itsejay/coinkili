@@ -141,73 +141,97 @@
     </footer>
 
     <script>
-        // Target specific high-impact coins for speed and reliability
-        const COIN_IDS = 'bitcoin,ethereum,tether,binancecoin,solana,ripple,usd-coin,cardano,dogecoin,tron';
-        const API_URL = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=tzs&ids=${COIN_IDS}&order=market_cap_desc&sparkline=true&price_change_percentage=24h`;
-        
-        const CACHE_KEY = 'coinkili_top10_cache';
+    // Pro IDs for Tanzania
+    const COIN_IDS = 'bitcoin,ethereum,tether,binancecoin,solana,ripple,usd-coin,cardano,dogecoin,tron';
+    const TZS_RATE = 2715; // Fallback exchange rate if TZS API fails
+    
+    // Using the stable public endpoint
+    const PRIMARY_URL = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=tzs&ids=${COIN_IDS}&order=market_cap_desc&sparkline=true&price_change_percentage=24h`;
+    const FALLBACK_URL = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${COIN_IDS}&order=market_cap_desc&sparkline=true&price_change_percentage=24h`;
 
-        const formatTZS = (num) => new Intl.NumberFormat('en-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(num);
-        const formatCompact = (num) => new Intl.NumberFormat('en-US', { notation: "compact", compactDisplay: "short" }).format(num);
+    const CACHE_KEY = 'coinkili_v2_cache';
 
-        function createSparkline(data, isUp) {
-            if(!data) return '';
-            const width = 80, height = 30;
-            const min = Math.min(...data), max = Math.max(...data), range = max - min;
-            const points = data.map((p, i) => `${(i/(data.length-1))*width},${height-((p-min)/range)*height}`).join(' ');
-            return `<svg class="sparkline"><path d="M ${points}" stroke="${isUp?'#16c784':'#ea3943'}" /></svg>`;
-        }
+    const formatTZS = (num) => new Intl.NumberFormat('en-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(num);
+    const formatCompact = (num) => new Intl.NumberFormat('en-US', { notation: "compact", compactDisplay: "short" }).format(num);
 
-        async function fetchMarket() {
-            const table = document.getElementById('crypto-table');
-            const loader = document.getElementById('loader');
+    function createSparkline(data, isUp) {
+        if(!data || data.length < 2) return '';
+        const width = 80, height = 30;
+        const min = Math.min(...data), max = Math.max(...data), range = (max - min) || 1;
+        const points = data.map((p, i) => `${(i/(data.length-1))*width},${height-((p-min)/range)*height}`).join(' ');
+        return `<svg class="sparkline"><path d="M ${points}" stroke="${isUp?'#16c784':'#ea3943'}" fill="none" /></svg>`;
+    }
 
-            // Try Cache
+    async function fetchMarket(useFallback = false) {
+        const table = document.getElementById('crypto-table');
+        const loader = document.getElementById('loader');
+        const url = useFallback ? FALLBACK_URL : PRIMARY_URL;
+
+        try {
+            const res = await fetch(url);
+            
+            if (!res.ok) {
+                if (!useFallback) return fetchMarket(true); // Try USD if TZS fails
+                throw new Error("Rate Limited");
+            }
+
+            let data = await res.json();
+
+            // If we used fallback, convert prices to TZS manually
+            if (useFallback) {
+                data = data.map(coin => ({
+                    ...coin,
+                    current_price: coin.current_price * TZS_RATE,
+                    market_cap: coin.market_cap * TZS_RATE
+                }));
+            }
+            
+            localStorage.setItem(CACHE_KEY, JSON.stringify({time: Date.now(), data: data}));
+            render(data);
+            loader.style.display = 'none';
+        } catch (e) {
+            console.error("Fetch Error:", e);
+            // Check cache if internet/API fails
             const cached = localStorage.getItem(CACHE_KEY);
             if(cached) {
-                render(JSON.parse(cached));
-                loader.style.display = 'none';
+                const parsed = JSON.parse(cached);
+                render(parsed.data);
+                loader.innerHTML = `<span style="font-size:0.7rem; color:orange;">Showing offline data. Auto-retrying...</span>`;
+            } else {
+                loader.innerHTML = `Market busy. <button onclick="location.reload()" style="background:none; border:1px solid #ccc; color:inherit; padding:2px 10px; border-radius:4px; cursor:pointer;">Retry</button>`;
             }
-
-            try {
-                const res = await fetch(API_URL);
-                if(!res.ok) throw new Error("Rate limit");
-                const data = await res.json();
-                
-                localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-                render(data);
-                loader.style.display = 'none';
-            } catch (e) {
-                if(!cached) loader.innerHTML = "API busy. Refreshing in 5s...";
-                setTimeout(fetchMarket, 5000);
-            }
+            // Auto-retry after 10 seconds
+            setTimeout(() => fetchMarket(), 10000);
         }
+    }
 
-        function render(data) {
-            const table = document.getElementById('crypto-table');
-            table.innerHTML = '';
-            data.forEach(coin => {
-                const isUp = coin.price_change_percentage_24h >= 0;
-                const row = `
-                    <tr>
-                        <td>
-                            <div class="coin-name">
-                                <img src="${coin.image}" class="coin-icon">
-                                <div>${coin.name} <span class="symbol">${coin.symbol}</span></div>
-                            </div>
-                        </td>
-                        <td>${formatTZS(coin.current_price)}</td>
-                        <td class="${isUp?'up':'down'}">${isUp?'▲':'▼'} ${Math.abs(coin.price_change_percentage_24h).toFixed(2)}%</td>
-                        <td>${createSparkline(coin.sparkline_in_7d.price, isUp)}</td>
-                        <td style="color:var(--text-secondary)">${formatCompact(coin.market_cap)}</td>
-                    </tr>
-                `;
-                table.innerHTML += row;
-            });
-        }
+    function render(data) {
+        const table = document.getElementById('crypto-table');
+        table.innerHTML = '';
+        data.forEach(coin => {
+            const isUp = (coin.price_change_percentage_24h || 0) >= 0;
+            const row = `
+                <tr>
+                    <td>
+                        <div class="coin-name">
+                            <img src="${coin.image}" class="coin-icon" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2272/2272825.png'">
+                            <div>${coin.name} <span class="symbol">${coin.symbol}</span></div>
+                        </div>
+                    </td>
+                    <td>${formatTZS(coin.current_price)}</td>
+                    <td class="${isUp?'up':'down'}">${isUp?'▲':'▼'} ${Math.abs(coin.price_change_percentage_24h || 0).toFixed(2)}%</td>
+                    <td>${createSparkline(coin.sparkline_in_7d?.price, isUp)}</td>
+                    <td style="color:var(--text-secondary)">${formatCompact(coin.market_cap)}</td>
+                </tr>
+            `;
+            table.innerHTML += row;
+        });
+    }
 
-        fetchMarket();
-    </script>
+    // Initial Start
+    fetchMarket();
+</script>
+
 </body>
 </html>
 
