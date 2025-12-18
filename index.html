@@ -40,30 +40,12 @@
         body { background-color: var(--bg-color); color: var(--text-primary); transition: 0.3s; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
 
-        /* --- NEW: WHALE TICKER --- */
-        .whale-ticker {
-            background: var(--ticker-bg);
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            padding: 8px 0;
-            overflow: hidden;
-            white-space: nowrap;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .ticker-track {
-            display: inline-block;
-            animation: marquee 40s linear infinite;
-        }
-        .ticker-item {
-            display: inline-block;
-            padding: 0 30px;
-            font-weight: 500;
-        }
+        /* TICKER */
+        .whale-ticker { background: var(--ticker-bg); color: var(--text-secondary); font-size: 0.75rem; padding: 8px 0; overflow: hidden; white-space: nowrap; border-bottom: 1px solid var(--border-color); }
+        .ticker-track { display: inline-block; animation: marquee 40s linear infinite; }
+        .ticker-item { display: inline-block; padding: 0 30px; font-weight: 500; }
         .ticker-item span { color: var(--accent-color); font-weight: 700; }
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         header { border-bottom: 1px solid var(--border-color); padding: 15px 0; background: var(--bg-color); position: sticky; top: 0; z-index: 1000; }
         .nav-flex { display: flex; justify-content: space-between; align-items: center; }
@@ -75,39 +57,28 @@
         .hero h1 { font-size: 2.2rem; margin-bottom: 10px; background: linear-gradient(90deg, #3861fb, #16c784); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hero p { color: var(--text-secondary); font-size: 1rem; max-width: 600px; margin: 0 auto; }
 
-        /* --- UPDATED: TABLE SECTION --- */
-        .market-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 15px;
-        }
-        .last-updated {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-style: italic;
-        }
+        /* --- NEW: HIGHLIGHT CARDS (GAINERS/LOSERS) --- */
+        .highlights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .highlight-card { background: var(--surface-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 15px; }
+        .hl-icon-box { width: 45px; height: 45px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .hl-gainer { background: rgba(22, 199, 132, 0.1); color: var(--up-color); }
+        .hl-loser { background: rgba(234, 57, 67, 0.1); color: var(--down-color); }
+        .hl-label { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px; }
+        .hl-coin { font-weight: 700; font-size: 1.1rem; }
 
-        .market-section { margin-bottom: 50px; }
-        .table-container { 
-            overflow-x: auto; 
-            background: var(--bg-color); 
-            border-radius: 12px; 
-            border: 1px solid var(--border-color);
-            position: relative;
-        }
+        /* TABLE */
+        .market-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; }
+        .last-updated { font-size: 0.75rem; color: var(--text-secondary); font-style: italic; }
+        .table-container { overflow-x: auto; background: var(--bg-color); border-radius: 12px; border: 1px solid var(--border-color); position: relative; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; }
         th { text-align: right; padding: 15px; font-size: 0.8rem; color: var(--text-secondary); border-bottom: 1px solid var(--border-color); background: var(--bg-color); position: sticky; top: 0; z-index: 10; }
         td { padding: 15px; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; font-weight: 500; text-align: right; }
-
         th:nth-child(1), td:nth-child(1) { position: sticky; left: 0; background: var(--sticky-bg); z-index: 5; text-align: left; min-width: 140px; border-right: 1px solid var(--border-color); }
-        
         .coin-name { display: flex; align-items: center; gap: 10px; }
         .coin-icon { width: 24px; height: 24px; border-radius: 50%; }
         .symbol { color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; }
         .up { color: var(--up-color); }
         .down { color: var(--down-color); }
-
         .sparkline { width: 80px; height: 30px; }
         path { fill: none; stroke-width: 2; }
 
@@ -144,6 +115,23 @@
     <div class="container hero">
         <h1>Karibu Crypto Tanzania</h1>
         <p>Real-time prices in Tanzanian Shillings (TZS). We track the top 10 most impactful assets for Tanzanian investors.</p>
+    </div>
+
+    <div class="container highlights-grid">
+        <div class="highlight-card" id="top-gainer-card">
+            <div class="hl-icon-box hl-gainer"><i class="fas fa-rocket"></i></div>
+            <div>
+                <p class="hl-label">Top Gainer (24h)</p>
+                <div class="hl-coin" id="gainer-info">Calculating...</div>
+            </div>
+        </div>
+        <div class="highlight-card" id="top-loser-card">
+            <div class="hl-icon-box hl-loser"><i class="fas fa-chart-line fa-flip-vertical"></i></div>
+            <div>
+                <p class="hl-label">Top Loser (24h)</p>
+                <div class="hl-coin" id="loser-info">Calculating...</div>
+            </div>
+        </div>
     </div>
 
     <div class="container market-section">
@@ -187,27 +175,18 @@
     </div>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2025 CoinKili. Built with ❤️ for Tanzania.</p>
-        </div>
+        <div class="container"><p>&copy; 2025 CoinKili. Built with ❤️ for Tanzania.</p></div>
     </footer>
 
     <script>
         const COIN_IDS = 'bitcoin,ethereum,tether,binancecoin,solana,ripple,usd-coin,cardano,dogecoin,tron';
         const TZS_RATE = 2715; 
-        
         const PRIMARY_URL = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=tzs&ids=${COIN_IDS}&order=market_cap_desc&sparkline=true&price_change_percentage=24h`;
         const FALLBACK_URL = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${COIN_IDS}&order=market_cap_desc&sparkline=true&price_change_percentage=24h`;
-
         const CACHE_KEY = 'coinkili_v2_cache';
 
         const formatTZS = (num) => new Intl.NumberFormat('en-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(num);
         const formatCompact = (num) => new Intl.NumberFormat('en-US', { notation: "compact", compactDisplay: "short" }).format(num);
-
-        function updateTimestamp() {
-            const now = new Date();
-            document.getElementById('update-time').innerText = `Last updated: ${now.toLocaleTimeString()}`;
-        }
 
         function createSparkline(data, isUp) {
             if(!data || data.length < 2) return '';
@@ -224,31 +203,20 @@
 
             try {
                 const res = await fetch(url);
-                if (!res.ok) {
-                    if (!useFallback) return fetchMarket(true);
-                    throw new Error("Rate Limited");
-                }
+                if (!res.ok) { if (!useFallback) return fetchMarket(true); throw new Error("API Limit"); }
 
                 let data = await res.json();
                 if (useFallback) {
-                    data = data.map(coin => ({
-                        ...coin,
-                        current_price: coin.current_price * TZS_RATE,
-                        market_cap: coin.market_cap * TZS_RATE
-                    }));
+                    data = data.map(coin => ({ ...coin, current_price: coin.current_price * TZS_RATE, market_cap: coin.market_cap * TZS_RATE }));
                 }
                 
                 localStorage.setItem(CACHE_KEY, JSON.stringify({time: Date.now(), data: data}));
                 render(data);
-                updateTimestamp();
                 loader.style.display = 'none';
+                document.getElementById('update-time').innerText = `Last updated: ${new Date().toLocaleTimeString()}`;
             } catch (e) {
                 const cached = localStorage.getItem(CACHE_KEY);
-                if(cached) {
-                    const parsed = JSON.parse(cached);
-                    render(parsed.data);
-                    document.getElementById('update-time').innerText = "Offline Mode";
-                }
+                if(cached) render(JSON.parse(cached).data);
                 setTimeout(() => fetchMarket(), 15000);
             }
         }
@@ -256,6 +224,15 @@
         function render(data) {
             const table = document.getElementById('crypto-table');
             table.innerHTML = '';
+            
+            // LOGIC FOR WINNER/LOSER
+            const sorted = [...data].sort((a,b) => b.price_change_percentage_24h - a.price_change_percentage_24h);
+            const winner = sorted[0];
+            const loser = sorted[sorted.length - 1];
+
+            document.getElementById('gainer-info').innerHTML = `${winner.name} <span style="color:var(--up-color)">+${winner.price_change_percentage_24h.toFixed(2)}%</span>`;
+            document.getElementById('loser-info').innerHTML = `${loser.name} <span style="color:var(--down-color)">${loser.price_change_percentage_24h.toFixed(2)}%</span>`;
+
             data.forEach(coin => {
                 const isUp = (coin.price_change_percentage_24h || 0) >= 0;
                 const row = `
@@ -277,7 +254,6 @@
         }
 
         fetchMarket();
-        // Auto-refresh every 60 seconds
         setInterval(fetchMarket, 60000);
     </script>
 </body>
