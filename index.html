@@ -12,225 +12,144 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- CSS VARIABLES & THEME CONFIGURATION --- */
+        /* --- THEME CONFIG --- */
         :root {
-            /* Light Theme (Default) */
             --bg-color: #ffffff;
-            --surface-color: #f8fafd;
+            --surface-color: #ffffff;
             --text-primary: #000000;
             --text-secondary: #58667e;
             --border-color: #eff2f5;
-            --accent-color: #3861fb; /* CoinMarketCap Blue */
-            --up-color: #16c784;     /* Green */
-            --down-color: #ea3943;   /* Red */
-            --hover-bg: #f8fafl;
-            --card-shadow: 0 4px 24px rgba(0,0,0,0.05);
+            --accent-color: #3861fb;
+            --up-color: #16c784;
+            --down-color: #ea3943;
+            --sticky-bg: #ffffff; /* Crucial for sticky column */
+            --shadow-color: rgba(0,0,0,0.05);
         }
 
-        /* Auto-Detect System Dark Mode */
         @media (prefers-color-scheme: dark) {
             :root {
-                /* CMC Style Dark Theme */
-                --bg-color: #0d1421;    /* Deep Dark Blue/Black */
-                --surface-color: #171924; /* Slightly lighter card bg */
+                --bg-color: #0d1421;
+                --surface-color: #171924;
                 --text-primary: #ffffff;
                 --text-secondary: #a1a7bb;
                 --border-color: #222531;
-                --accent-color: #3861fb;
-                --hover-bg: #171924;
-                --card-shadow: 0 4px 24px rgba(0,0,0,0.4);
+                --sticky-bg: #0d1421;
+                --shadow-color: rgba(0,0,0,0.4);
             }
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-primary); }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            transition: background-color 0.3s, color 0.3s;
-        }
+        /* --- LAYOUT --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
 
-        /* --- LAYOUT & HEADER --- */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-
+        /* HEADER */
         header {
+            position: sticky; top: 0; z-index: 1000;
+            background: var(--bg-color);
             border-bottom: 1px solid var(--border-color);
             padding: 15px 0;
-            background: var(--bg-color);
-            position: sticky;
-            top: 0;
-            z-index: 100;
         }
+        .nav-flex { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 700; font-size: 1.4rem; color: var(--text-primary); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo span { color: var(--accent-color); }
 
-        .nav-flex {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* SEARCH BAR (New) */
+        .search-container {
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .logo span {
-            color: var(--accent-color);
-        }
-
-        .status-pill {
-            font-size: 0.8rem;
-            background: rgba(56, 97, 251, 0.1);
-            color: var(--accent-color);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-
-        /* --- HERO SECTION --- */
-        .hero {
-            padding: 40px 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #3861fb, #16c784);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* --- MARKET TABLE --- */
-        .market-section {
-            margin-bottom: 50px;
-        }
-
-        .table-container {
-            overflow-x: auto; /* Scroll on mobile */
-            background: var(--bg-color);
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
             border-radius: 12px;
-            box-shadow: var(--card-shadow);
             border: 1px solid var(--border-color);
+            background: var(--surface-color);
+            color: var(--text-primary);
+            font-size: 1rem;
+            outline: none;
+        }
+        .search-input:focus { border-color: var(--accent-color); }
+
+        /* --- ADVANCED TABLE STYLES --- */
+        .table-wrapper {
+            overflow-x: auto; /* Enables Horizontal Scroll */
+            border-radius: 12px;
+            box-shadow: 0 4px 24px var(--shadow-color);
+            border: 1px solid var(--border-color);
+            position: relative;
         }
 
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate; /* Required for sticky */
+            border-spacing: 0;
             white-space: nowrap;
         }
 
         th {
-            text-align: left;
-            padding: 15px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            border-bottom: 1px solid var(--border-color);
-            position: sticky; /* Keep headers visible */
-            top: 0;
             background: var(--bg-color);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            padding: 15px;
+            text-align: right; /* Default align numbers right */
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 20;
         }
 
         td {
             padding: 15px;
             border-bottom: 1px solid var(--border-color);
-            font-size: 0.95rem;
+            text-align: right;
             font-weight: 500;
+            font-size: 0.95rem;
         }
 
-        tr:hover {
-            background-color: var(--surface-color);
+        /* STICKY COLUMNS CONFIGURATION */
+        /* Column 1: Rank (#) */
+        th:nth-child(1), td:nth-child(1) {
+            position: sticky;
+            left: 0;
+            background: var(--sticky-bg);
+            z-index: 10;
+            text-align: center;
+            width: 50px;
+            border-right: 1px solid var(--border-color);
         }
 
-        .coin-name {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        /* Column 2: Coin Name */
+        th:nth-child(2), td:nth-child(2) {
+            position: sticky;
+            left: 50px; /* Push it after the Rank column */
+            background: var(--sticky-bg);
+            z-index: 10;
+            text-align: left;
+            min-width: 160px;
+            box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1); /* Subtle shadow separator */
+        }
+        
+        /* Ensure headers stay on top of sticky columns when scrolling down */
+        thead th:nth-child(1), thead th:nth-child(2) {
+            z-index: 30; 
         }
 
-        .coin-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-        }
-
-        .symbol {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            font-weight: 400;
-            text-transform: uppercase;
-        }
-
-        .percent-change {
-            font-weight: 600;
-        }
+        .coin-flex { display: flex; align-items: center; gap: 10px; }
+        .coin-icon { width: 24px; height: 24px; border-radius: 50%; }
+        .coin-symbol { color: var(--text-secondary); font-size: 0.8rem; margin-left: 5px; }
 
         .up { color: var(--up-color); }
         .down { color: var(--down-color); }
-
-        /* --- INFO SECTION --- */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 60px;
-        }
-
-        .info-card {
-            background: var(--surface-color);
-            padding: 25px;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-        }
-
-        .info-card h3 {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
         
-        .info-card p {
-            color: var(--text-secondary);
-            line-height: 1.6;
-            font-size: 0.9rem;
-        }
+        /* Sparkline Chart SVG */
+        .sparkline { width: 100px; height: 35px; }
+        path { fill: none; stroke-width: 2; stroke-linecap: round; }
 
         /* --- FOOTER --- */
-        footer {
-            border-top: 1px solid var(--border-color);
-            padding: 30px 0;
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
+        footer { padding: 40px 0; text-align: center; color: var(--text-secondary); font-size: 0.85rem; border-top: 1px solid var(--border-color); margin-top: 40px;}
 
-        /* --- LOADER --- */
-        #loader {
-            text-align: center;
-            padding: 20px;
-            color: var(--text-secondary);
-        }
     </style>
 </head>
 <body>
@@ -239,19 +158,24 @@
         <div class="container nav-flex">
             <a href="#" class="logo">
                 <i class="fa-solid fa-coins" style="color: #F7931A;"></i> 
-                Coin<span>Kili</span> 🇹🇿
+                Coin<span>Kili</span>
             </a>
-            <div class="status-pill">Beta v1.0</div>
+            <i class="fas fa-moon" style="color: var(--text-secondary);"></i>
         </div>
     </header>
 
-    <div class="container hero">
-        <h1>Karibu Crypto Tanzania</h1>
-        <p>Real-time cryptocurrency prices in Tanzanian Shillings (TZS). Track the market, spot the trends, and learn why crypto is the future.</p>
-    </div>
+    <div class="container">
+        
+        <div style="margin: 30px 0;">
+            <h2 style="font-size: 1.5rem; margin-bottom: 5px;">Today's Prices in TZS</h2>
+            <p style="color: var(--text-secondary);">Top coins by market cap</p>
+        </div>
 
-    <div class="container market-section">
-        <div class="table-container">
+        <div class="search-container">
+            <input type="text" id="search-input" class="search-input" placeholder="Search coins (e.g. Bitcoin, Ethereum)...">
+        </div>
+
+        <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>
@@ -259,108 +183,110 @@
                         <th>Coin</th>
                         <th>Price (TZS)</th>
                         <th>24h %</th>
+                        <th>7d Chart</th>
                         <th>Mkt Cap</th>
                     </tr>
                 </thead>
                 <tbody id="crypto-table">
                     </tbody>
             </table>
-            <div id="loader"><i class="fas fa-spinner fa-spin"></i> Loading Market Data...</div>
+            <div id="loader" style="text-align: center; padding: 20px; color: var(--text-secondary);">
+                <i class="fas fa-circle-notch fa-spin"></i> Loading Market Data...
+            </div>
         </div>
-    </div>
 
-    <div class="container info-grid">
-        <div class="info-card">
-            <h3><i class="fas fa-fire" style="color: orange;"></i> Trending in TZ</h3>
-            <p>Bitcoin (BTC) and USDT are currently the most traded assets in Dar es Salaam. Watch out for emerging altcoins gaining traction in East Africa.</p>
-        </div>
-        <div class="info-card">
-            <h3><i class="fas fa-university" style="color: #3861fb;"></i> Why Invest?</h3>
-            <p>Cryptocurrency offers Tanzanians a hedge against inflation and a way to transact globally without high banking fees. Start small, learn fast.</p>
-        </div>
-        <div class="info-card">
-            <h3><i class="fas fa-user-secret" style="color: #16c784;"></i> Whale Watch</h3>
-            <p>Institutional interest is growing. We track large wallet movements to give you an edge on where the smart money is flowing.</p>
-        </div>
     </div>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2024 CoinKili. Built with ❤️ for Tanzania.</p>
-            <p style="font-size: 0.8rem; margin-top:5px;">Data provided by CoinGecko API</p>
-        </div>
+        <p>Built for Tanzania 🇹🇿 | Data by CoinGecko</p>
     </footer>
 
     <script>
-        // API Configuration (CoinGecko)
-        // We request prices in TZS directly
-        const API_URL = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=tzs&order=market_cap_desc&per_page=20&page=1&sparkline=false';
+        // Use 'sparkline=true' to get the 7-day data
+        const API_URL = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=tzs&order=market_cap_desc&per_page=50&page=1&sparkline=true&price_change_percentage=24h';
+        
+        let allCoins = []; // Store data for searching
 
-        // Format Currency (TZS)
-        const formatTZS = (price) => {
-            return new Intl.NumberFormat('en-TZ', {
-                style: 'currency',
-                currency: 'TZS',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(price);
-        };
+        // Formatting Helpers
+        const formatTZS = (num) => new Intl.NumberFormat('en-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(num);
+        const formatCompact = (num) => new Intl.NumberFormat('en-US', { notation: "compact", compactDisplay: "short" }).format(num);
 
-        // Format Large Numbers (Market Cap)
-        const formatCompact = (number) => {
-            return new Intl.NumberFormat('en-US', {
-                notation: "compact",
-                compactDisplay: "short"
-            }).format(number);
-        };
+        // --- SPARKLINE GENERATOR (The "Pro" feature) ---
+        // Converts array of prices into an SVG path string
+        function createSparkline(data, isUp) {
+            const width = 100; 
+            const height = 35;
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const range = max - min;
+            
+            // Map points to SVG coordinates
+            const points = data.map((price, index) => {
+                const x = (index / (data.length - 1)) * width;
+                const y = height - ((price - min) / range) * height; // Invert Y because SVG 0 is top
+                return `${x},${y}`;
+            }).join(' ');
 
-        async function fetchCryptoData() {
-            const tableBody = document.getElementById('crypto-table');
-            const loader = document.getElementById('loader');
+            const color = isUp ? '#16c784' : '#ea3943';
+            return `<svg class="sparkline"><path d="M ${points}" stroke="${color}" /></svg>`;
+        }
 
+        async function init() {
             try {
-                const response = await fetch(API_URL);
-                const data = await response.json();
-
-                loader.style.display = 'none'; // Hide loader
-
-                data.forEach((coin) => {
-                    const row = document.createElement('tr');
-                    
-                    // Determine color for 24h change
-                    const changeClass = coin.price_change_percentage_24h >= 0 ? 'up' : 'down';
-                    const changeIcon = coin.price_change_percentage_24h >= 0 ? '▲' : '▼';
-
-                    row.innerHTML = `
-                        <td style="color: var(--text-secondary);">${coin.market_cap_rank}</td>
-                        <td>
-                            <div class="coin-name">
-                                <img src="${coin.image}" alt="${coin.name}" class="coin-icon">
-                                <div>
-                                    <span>${coin.name}</span>
-                                    <span class="symbol">${coin.symbol}</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td>${formatTZS(coin.current_price)}</td>
-                        <td class="percent-change ${changeClass}">
-                            ${Math.abs(coin.price_change_percentage_24h).toFixed(2)}%
-                        </td>
-                        <td style="color: var(--text-secondary);">${formatCompact(coin.market_cap)}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-
-            } catch (error) {
-                loader.innerHTML = "Failed to load data. Please refresh.";
-                console.error("Error fetching data:", error);
+                const res = await fetch(API_URL);
+                allCoins = await res.json();
+                renderTable(allCoins);
+                document.getElementById('loader').style.display = 'none';
+            } catch (err) {
+                console.error(err);
             }
         }
 
-        // Initialize
-        fetchCryptoData();
+        function renderTable(coins) {
+            const tbody = document.getElementById('crypto-table');
+            tbody.innerHTML = ''; // Clear current
 
+            coins.forEach(coin => {
+                const tr = document.createElement('tr');
+                const isUp = coin.price_change_percentage_24h >= 0;
+                
+                // Generate the mini chart
+                const chartSvg = createSparkline(coin.sparkline_in_7d.price, isUp);
+
+                tr.innerHTML = `
+                    <td>${coin.market_cap_rank}</td>
+                    <td>
+                        <div class="coin-flex">
+                            <img src="${coin.image}" class="coin-icon" alt="">
+                            <div>
+                                <span>${coin.name}</span>
+                                <span class="coin-symbol">${coin.symbol.toUpperCase()}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${formatTZS(coin.current_price)}</td>
+                    <td class="${isUp ? 'up' : 'down'}">
+                        <i class="fas fa-caret-${isUp ? 'up' : 'down'}"></i>
+                        ${Math.abs(coin.price_change_percentage_24h).toFixed(2)}%
+                    </td>
+                    <td>${chartSvg}</td>
+                    <td style="color: var(--text-secondary)">${formatCompact(coin.market_cap)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Search Logic
+        document.getElementById('search-input').addEventListener('keyup', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allCoins.filter(coin => 
+                coin.name.toLowerCase().includes(term) || 
+                coin.symbol.toLowerCase().includes(term)
+            );
+            renderTable(filtered);
+        });
+
+        init();
     </script>
 </body>
 </html>
-
