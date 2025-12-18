@@ -3,118 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoinKili 🇹🇿 | Pro Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>CoinKili 🇹🇿 | Karibu Crypto Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --bg: #ffffff; --surf: #f8fafd; --text: #000; --sec: #58667e;
-            --brd: #eff2f5; --acc: #3861fb; --up: #16c784; --down: #ea3943;
+            /* REVERTED TO BLUE/CYAN VIBE */
+            --bg: #ffffff; --surf: #f0f7ff; --text: #0d1e3c; --sec: #58667e;
+            --brd: #e2e8f0; --acc: #0070f3; --up: #16c784; --down: #ea3943;
+            --grad: linear-gradient(135deg, #0070f3 0%, #00dfd8 100%);
             --card-blue: #eef2ff; --card-orange: #fff7ed; --card-green: #f0fdf4;
         }
         @media (prefers-color-scheme: dark) {
             :root { 
-                --bg: #0d1421; --surf: #171924; --text: #fff; --sec: #a1a7bb; --brd: #222531; 
+                --bg: #060b13; --surf: #0d1421; --text: #ffffff; --sec: #a1a7bb; --brd: #1e293b; 
                 --card-blue: #1e293b; --card-orange: #2d2016; --card-green: #142d1f;
             }
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); font-size: 13px; -webkit-font-smoothing: antialiased; }
-        
-        /* Layout Container - Professional Centering */
+        body { background: var(--bg); color: var(--text); font-size: 13px; }
         .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 
-        /* GLOBAL BAR */
-        .global-bar { background: var(--bg); border-bottom: 1px solid var(--brd); padding: 8px 0; font-size: 11px; color: var(--sec); overflow-x: auto; white-space: nowrap; }
-        .global-bar span { color: var(--acc); font-weight: 700; margin-left: 5px; }
+        /* THE BRIGHT BLUE HEADER */
+        header { background: var(--grad); padding: 18px 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0, 112, 243, 0.2); }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 800; text-decoration: none; color: white; display: flex; align-items: center; gap: 8px; }
+        .logo i { color: #FFD700; }
         
-        /* TICKER - FIXED ANIMATION */
-        .whale-ticker { background: var(--surf); border-bottom: 1px solid var(--brd); padding: 10px 0; overflow: hidden; position: relative; }
-        .ticker-track { display: flex; width: max-content; animation: marquee 60s linear infinite; }
-        .ticker-item { padding: 0 40px; white-space: nowrap; font-weight: 600; color: var(--sec); font-size: 12px; }
+        .lang-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); padding: 8px 16px; border-radius: 25px; font-size: 12px; cursor: pointer; color: white; font-weight: 700; backdrop-filter: blur(5px); }
+
+        /* GLOBAL STATS & TICKER */
+        .global-bar { background: var(--surf); border-bottom: 1px solid var(--brd); padding: 8px 0; font-size: 11px; color: var(--sec); }
+        .global-bar span { color: var(--acc); font-weight: 700; }
+        
+        .whale-ticker { background: var(--bg); border-bottom: 1px solid var(--brd); padding: 10px 0; overflow: hidden; }
+        .ticker-track { display: flex; width: max-content; animation: marquee 50s linear infinite; }
+        .ticker-item { padding: 0 40px; font-weight: 600; font-size: 12px; color: var(--acc); }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        header { padding: 15px 0; border-bottom: 1px solid var(--brd); position: sticky; top: 0; background: var(--bg); z-index: 1000; }
-        .nav-content { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.4rem; font-weight: 800; text-decoration: none; color: var(--text); }
-        .logo span { color: var(--acc); }
+        /* HERO - RESTORED FULL WORDS */
+        .hero { padding: 50px 0; text-align: left; background: var(--surf); border-bottom: 1px solid var(--brd); margin-bottom: 30px; }
+        .hero h1 { font-size: 2.2rem; margin-bottom: 10px; font-weight: 800; color: var(--text); }
+        .hero p { color: var(--sec); font-size: 1.1rem; max-width: 700px; line-height: 1.6; }
 
-        .lang-btn { background: var(--surf); border: 1px solid var(--brd); padding: 6px 14px; border-radius: 20px; font-size: 12px; cursor: pointer; color: var(--text); font-weight: 600; display: flex; align-items: center; gap: 6px; }
-
-        /* HERO AREA */
-        .hero { padding: 40px 0; text-align: left; border-bottom: 1px solid var(--brd); margin-bottom: 20px; }
-        .hero h1 { font-size: 1.8rem; margin-bottom: 8px; font-weight: 800; }
-        .hero p { color: var(--sec); font-size: 1rem; }
-
-        /* HIGHLIGHTS - BLOCK STYLE MIMMICKING COINGECKO */
-        .hl-section { margin-bottom: 30px; }
-        .hl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
-        .hl-card { background: var(--surf); padding: 20px; border-radius: 12px; border: 1px solid var(--brd); }
-        .hl-title { font-size: 12px; font-weight: 700; color: var(--sec); text-transform: uppercase; margin-bottom: 15px; border-bottom: 1px solid var(--brd); padding-bottom: 10px; }
-        .hl-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-weight: 600; border-bottom: 1px solid rgba(0,0,0,0.03); }
+        /* HIGHLIGHT BLOCKS */
+        .hl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .hl-card { background: var(--bg); padding: 20px; border-radius: 15px; border: 1px solid var(--brd); box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+        .hl-title { font-size: 12px; font-weight: 800; color: var(--sec); text-transform: uppercase; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .hl-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--brd); }
         .hl-row:last-child { border: none; }
-        .hl-coin-meta { display: flex; gap: 12px; align-items: center; }
-        .hl-rank-num { color: var(--sec); font-size: 11px; width: 15px; }
+        .hl-coin { display: flex; align-items: center; gap: 12px; font-weight: 700; }
 
-        /* TABLE - HIGH DENSITY */
-        .table-wrap { overflow-x: auto; border: 1px solid var(--brd); border-radius: 12px; }
-        table { width: 100%; border-collapse: collapse; min-width: 850px; }
-        th { padding: 12px 15px; text-align: right; color: var(--sec); font-size: 11px; border-bottom: 1px solid var(--brd); background: var(--surf); }
-        td { padding: 14px 15px; text-align: right; border-bottom: 1px solid var(--brd); font-weight: 600; }
+        /* THE STICKY TABLE MASTERPIECE */
+        .table-wrap { overflow-x: auto; border: 1px solid var(--brd); border-radius: 12px; background: var(--bg); }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 900px; }
+        th { padding: 15px; text-align: right; color: var(--sec); font-size: 11px; font-weight: 700; text-transform: uppercase; background: var(--surf); border-bottom: 2px solid var(--brd); }
+        td { padding: 16px 15px; text-align: right; border-bottom: 1px solid var(--brd); font-weight: 600; }
         
-        /* Sticky Logic */
-        th:nth-child(1), td:nth-child(1) { text-align: center; width: 40px; color: var(--sec); font-weight: 400; }
-        th:nth-child(2), td:nth-child(2) { position: sticky; left: 0; background: var(--bg); z-index: 10; text-align: left; min-width: 180px; border-right: 1px solid var(--brd); }
+        /* THE STICKY LOGIC */
+        th:nth-child(1), td:nth-child(1) { text-align: center; width: 50px; }
+        th:nth-child(2), td:nth-child(2) { 
+            position: sticky; left: 0; background: var(--bg); z-index: 10; text-align: left; 
+            min-width: 200px; border-right: 1px solid var(--brd); 
+        }
+        th:nth-child(2) { background: var(--surf); }
 
         .coin-box { display: flex; align-items: center; gap: 12px; }
-        .coin-icon { width: 24px; height: 24px; }
+        .coin-icon { width: 26px; height: 26px; border-radius: 50%; }
         .up { color: var(--up); } .down { color: var(--down); }
 
-        /* FOOTER INFO */
+        /* RESTORED COLORED INFO CARDS */
         .info-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 60px 0; }
-        .info-card { padding: 30px; border-radius: 16px; border: 1px solid var(--brd); }
-        .info-card h3 { margin-bottom: 15px; font-size: 1.1rem; font-weight: 700; }
-        .blue { background: var(--card-blue); } .orange { background: var(--card-orange); } .green { background: var(--card-green); }
+        .info-card { padding: 30px; border-radius: 18px; border: 1px solid var(--brd); }
+        .info-card h3 { margin-bottom: 15px; font-size: 1.2rem; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .orange { background: var(--card-orange); }
+        .blue { background: var(--card-blue); }
+        .green { background: var(--card-green); }
 
-        footer { border-top: 1px solid var(--brd); padding: 60px 0; text-align: center; color: var(--sec); font-size: 0.9rem; }
+        footer { border-top: 1px solid var(--brd); padding: 60px 0; text-align: center; color: var(--sec); }
     </style>
 </head>
 <body>
 
-    <div class="global-bar"><div class="container" id="global-stats">Mizani ya Dunia...</div></div>
+    <div class="global-bar"><div class="container" id="global-stats">Loading Market Pulse...</div></div>
     
-    <div class="whale-ticker" id="ticker-wrap">
-        <div class="ticker-track" id="whale-track">
-            </div>
-    </div>
+    <div class="whale-ticker"><div class="ticker-track" id="whale-track"></div></div>
 
     <header>
         <div class="container nav-content">
-            <a href="#" class="logo">Coin<span>Kili</span> 🇹🇿</a>
-            <button class="lang-btn" onclick="toggleLang()" id="lang-toggle">
-                <i class="fa-solid fa-language"></i> <span>Swahili</span>
-            </button>
+            <a href="#" class="logo"><i class="fa-solid fa-bolt"></i> Coin<span>Kili</span> 🇹🇿</a>
+            <button class="lang-btn" onclick="toggleLang()" id="lang-toggle"><span>Swahili</span></button>
         </div>
     </header>
 
-    <div class="container">
-        <div class="hero">
-            <h1 id="hero-title">Tanzania's #1 Real-Time Crypto Hub</h1>
-            <p id="hero-desc">Live prices for the top 100 assets, custom-converted for the Tanzanian market.</p>
+    <div class="hero">
+        <div class="container">
+            <h1 id="hero-title">Karibu Crypto Kili Hub</h1>
+            <p id="hero-desc">Tanzania's #1 destination for real-time crypto prices. Tracking the top 100 global assets with instant TZS conversion and whale movement alerts.</p>
         </div>
+    </div>
 
-        <div class="hl-section">
-            <div class="hl-grid">
-                <div class="hl-card">
-                    <div class="hl-title"><i class="fa fa-rocket" style="color:var(--up)"></i> <span id="txt-gain">Top 3 Gainers</span></div>
-                    <div id="top-gainers"></div>
-                </div>
-                <div class="hl-card">
-                    <div class="hl-title"><i class="fa fa-crown" style="color:#FFD700"></i> <span id="txt-cap">Market Leaders</span></div>
-                    <div id="top-leaders"></div>
-                </div>
+    <div class="container">
+        <div class="hl-grid">
+            <div class="hl-card">
+                <div class="hl-title"><i class="fa fa-fire" style="color:#f97316"></i> <span id="txt-gain">Zilizopanda Zaidi</span></div>
+                <div id="top-gainers"></div>
+            </div>
+            <div class="hl-card">
+                <div class="hl-title"><i class="fa fa-chart-line" style="color:var(--acc)"></i> <span id="txt-cap">Viongozi wa Soko</span></div>
+                <div id="top-leaders"></div>
             </div>
         </div>
 
@@ -122,8 +121,8 @@
             <table>
                 <thead>
                     <tr>
-                        <th>#</th><th id="th-coin">Coin</th><th id="th-price">Price (TZS)</th>
-                        <th>24h %</th><th id="th-chart">7d Chart</th><th id="th-mcap">Market Cap</th>
+                        <th>#</th><th id="th-coin">Sarafu</th><th id="th-price">Bei (TZS)</th>
+                        <th>24h %</th><th id="th-chart">Chart (7d)</th><th id="th-mcap">Market Cap</th>
                     </tr>
                 </thead>
                 <tbody id="coin-table"></tbody>
@@ -132,25 +131,25 @@
 
         <div class="info-section">
             <div class="info-card orange">
-                <h3 id="card1-h"><i class="fa fa-fire" style="color:#f97316"></i> Trending in TZ</h3>
+                <h3 id="card1-h"><i class="fa fa-bolt"></i> Trending in TZ</h3>
                 <p id="card1-p">Bitcoin and USDT dominate local volume. Solana (SOL) is seeing massive community growth in Dar and Arusha.</p>
             </div>
             <div class="info-card blue">
-                <h3 id="card2-h"><i class="fa fa-shield-halved" style="color:#3861fb"></i> Why these 100?</h3>
+                <h3 id="card2-h"><i class="fa fa-shield"></i> Why these 100?</h3>
                 <p id="card2-p">These represent the global market's core. We monitor these assets 24/7 to ensure Tanzanians have the best data.</p>
             </div>
             <div class="info-card green">
-                <h3 id="card3-h"><i class="fa fa-user-secret" style="color:#16c784"></i> Smart Money</h3>
-                <p id="card3-p">By watching the top 100, you follow institutional moves. Smart investors in TZ look for coins with strong local utility.</p>
+                <h3 id="card3-h"><i class="fa fa-user-secret"></i> Smart Money</h3>
+                <p id="card3-p">By watching the top 100, you follow institutional moves. Smart investors in TZ look for coins with strong utility.</p>
             </div>
         </div>
     </div>
 
     <footer>
         <div class="container">
-            <p id="foot-copy">© 2025 CoinKili. All Rights Reserved.</p>
-            <p style="margin:12px 0;" id="foot-made">Made with ❤️ for Tanzanians</p>
-            <p style="font-size:11px; opacity: 0.7;">Data powered by <b>CoinGecko</b></p>
+            <p id="foot-copy">© 2025 CoinKili Tanzania. Haki zote zimehifadhiwa.</p>
+            <p style="margin:12px 0; font-weight:700;" id="foot-made">Made with ❤️ for the TZ Crypto Community</p>
+            <p style="font-size:11px; opacity: 0.6;">Market data provided by <b>CoinGecko</b></p>
         </div>
     </footer>
 
@@ -160,8 +159,24 @@
         const TZS_RATE = 2715;
 
         const trans = {
-            sw: { heroT: "Kitovu namba 1 cha Crypto Tanzania", heroD: "Bei mubashara za sarafu 100 kuu kwa soko la Tanzania.", gain: "Zilizopanda Zaidi", cap: "Viongozi wa Soko", coin: "Sarafu", price: "Bei (TZS)", chart: "Chati ya Siku 7", mcap: "Mtaji wa Soko", c1h: "Zinazovuma TZ", c1p: "Bitcoin na USDT bado ni nguzo kuu. Solana inakua kwa kasi sana.", c2h: "Kwanini hizi 100?", c2p: "Hizi ndizo sarafu kuu duniani. Tunazifuatilia saa 24 kwa ajili yako.", c3h: "Fedha ya Akili", c3p: "Fuata nyayo za wakubwa. Wawekezaji wajanja TZ huangalia matumizi ya sarafu.", copy: "© 2025 CoinKili. Haki zote zimehifadhiwa.", made: "Imetengenezwa na ❤️ kwa ajili ya Watanzania", btn: "English" },
-            en: { heroT: "Tanzania's #1 Real-Time Crypto Hub", heroD: "Live prices for the top 100 assets, custom-converted for the Tanzanian market.", gain: "Top 3 Gainers", cap: "Market Leaders", coin: "Coin", price: "Price (TZS)", chart: "7d Chart", mcap: "Market Cap", c1h: "Trending in TZ", c1p: "Bitcoin and USDT dominate local volume. Solana is seeing massive growth.", c2h: "Why these 100?", c2p: "These represent the global market's core. We monitor these assets 24/7.", c3h: "Smart Money", c3p: "Follow institutional moves. Look for strong local utility assets.", copy: "© 2025 CoinKili. All Rights Reserved.", made: "Made with ❤️ for Tanzanians", btn: "Swahili" }
+            sw: {
+                heroT: "Karibu Crypto Kili Hub",
+                heroD: "Kituo namba #1 cha Tanzania kwa bei za crypto mubashara. Tunafuatilia sarafu 100 kuu duniani zilizobadilishwa kwenda TZS.",
+                gain: "Zilizopanda Zaidi", cap: "Viongozi wa Soko", coin: "Sarafu", price: "Bei (TZS)", chart: "Chati (Siku 7)", mcap: "Mtaji",
+                c1h: "Zinazovuma TZ", c1p: "Bitcoin na USDT bado ni nguzo kuu. Solana inakua sana Dar na Arusha.",
+                c2h: "Kwanini hizi 100?", c2p: "Hizi ni sarafu kuu duniani. Tunazifuatilia saa 24 kwa ajili yako.",
+                c3h: "Fedha ya Akili", c3p: "Fuata nyayo za wakubwa. Wawekezaji wajanja TZ huangalia sarafu zenye matumizi.",
+                copy: "© 2025 CoinKili Tanzania. Haki zote zimehifadhiwa.", made: "Imetengenezwa na ❤️ kwa ajili ya Watanzania", btn: "English"
+            },
+            en: {
+                heroT: "Karibu Crypto Kili Hub",
+                heroD: "Tanzania's #1 destination for real-time crypto prices. Tracking the top 100 global assets with instant TZS conversion.",
+                gain: "Top Gainers", cap: "Market Leaders", coin: "Coin", price: "Price (TZS)", chart: "Chart (7d)", mcap: "Market Cap",
+                c1h: "Trending in TZ", c1p: "Bitcoin and USDT dominate local volume. Solana is seeing massive community growth.",
+                c2h: "Why these 100?", c2p: "These represent the global market's core. We monitor these assets 24/7.",
+                c3h: "Smart Money", c3p: "Follow institutional moves. Look for strong local utility assets.",
+                copy: "© 2025 CoinKili Tanzania. All Rights Reserved.", made: "Made with ❤️ for the TZ Crypto Community", btn: "Swahili"
+            }
         };
 
         function toggleLang() {
@@ -175,11 +190,11 @@
             document.getElementById('th-price').innerText = t.price;
             document.getElementById('th-chart').innerText = t.chart;
             document.getElementById('th-mcap').innerText = t.mcap;
-            document.getElementById('card1-h').innerHTML = `<i class="fa fa-fire" style="color:#f97316"></i> ` + t.c1h;
+            document.getElementById('card1-h').innerHTML = `<i class="fa fa-bolt"></i> ` + t.c1h;
             document.getElementById('card1-p').innerText = t.c1p;
-            document.getElementById('card2-h').innerHTML = `<i class="fa fa-shield-halved" style="color:#3861fb"></i> ` + t.c2h;
+            document.getElementById('card2-h').innerHTML = `<i class="fa fa-shield"></i> ` + t.c2h;
             document.getElementById('card2-p').innerText = t.c2p;
-            document.getElementById('card3-h').innerHTML = `<i class="fa fa-user-secret" style="color:#16c784"></i> ` + t.c3h;
+            document.getElementById('card3-h').innerHTML = `<i class="fa fa-user-secret"></i> ` + t.c3h;
             document.getElementById('card3-p').innerText = t.c3p;
             document.getElementById('foot-copy').innerText = t.copy;
             document.getElementById('foot-made').innerText = t.made;
@@ -198,9 +213,8 @@
         }
 
         function setupTicker() {
-            const alerts = ["Whale moved 5,000 BTC to Binance", "100M USDT minted at Tether Treasury", "Whale Alert: 1,500 ETH moved to Unknown Wallet", "Crypto Inflow: 250M USDC detected"];
-            const track = document.getElementById('whale-track');
-            track.innerHTML = [...alerts, ...alerts, ...alerts].map(a => `<div class="ticker-item">🚨 ALERT: ${a}</div>`).join('');
+            const alerts = ["Whale moved 5,000 BTC to Binance", "100M USDT minted at Treasury", "Whale Alert: 1,500 ETH moved to Wallet", "TZ Inflow: Increased volume in Dar"];
+            document.getElementById('whale-track').innerHTML = [...alerts, ...alerts, ...alerts].map(a => `<div class="ticker-item">🚨 ALERT: ${a}</div>`).join('');
         }
 
         function render(data) {
@@ -208,7 +222,7 @@
             document.getElementById('coin-table').innerHTML = data.map(c => `
                 <tr>
                     <td>${c.market_cap_rank}</td>
-                    <td><div class="coin-box"><img src="${c.image}" class="coin-icon"><div>${c.name} <span class="symbol">${c.symbol}</span></div></div></td>
+                    <td><div class="coin-box"><img src="${c.image}" class="coin-icon"><div>${c.name} <span style="font-size:10px; color:var(--sec)">${c.symbol.toUpperCase()}</span></div></div></td>
                     <td>${fmt(c.current_price)}</td>
                     <td class="${c.price_change_percentage_24h>=0?'up':'down'}">${c.price_change_percentage_24h>=0?'▲':'▼'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}%</td>
                     <td><svg width="80" height="25" stroke="${c.price_change_percentage_24h>=0?'#16c784':'#ea3943'}" fill="none"><polyline points="${c.sparkline_in_7d.price.map((p,i)=>`${i/167*80},${25-(p-Math.min(...c.sparkline_in_7d.price))/(Math.max(...c.sparkline_in_7d.price)-Math.min(...c.sparkline_in_7d.price))*25}`).join(' ')}"/></svg></td>
@@ -218,12 +232,12 @@
             const g = [...data].sort((a,b) => b.price_change_percentage_24h - a.price_change_percentage_24h).slice(0,3);
             document.getElementById('top-gainers').innerHTML = g.map((c, i) => `
                 <div class="hl-row">
-                    <div class="hl-coin-meta"><span class="hl-rank-num">${i+1}</span><img src="${c.image}" style="width:16px">${c.name}</div>
+                    <div class="hl-coin"><img src="${c.image}" style="width:16px">${c.name}</div>
                     <span class="up">+${c.price_change_percentage_24h.toFixed(1)}%</span>
                 </div>`).join('');
             document.getElementById('top-leaders').innerHTML = data.slice(0,3).map((c, i) => `
                 <div class="hl-row">
-                    <div class="hl-coin-meta"><span class="hl-rank-num">${i+1}</span><img src="${c.image}" style="width:16px">${c.name}</div>
+                    <div class="hl-coin"><img src="${c.image}" style="width:16px">${c.name}</div>
                     <span style="color:var(--sec)">${new Intl.NumberFormat('en-US', {notation:'compact'}).format(c.market_cap * TZS_RATE)}</span>
                 </div>`).join('');
         }
@@ -232,7 +246,7 @@
             const res = await fetch("https://api.coingecko.com/api/v3/global");
             const { data } = await res.json();
             document.getElementById('global-stats').innerHTML = `
-                <div class="container">Soko la Dunia (Cap): <span>${new Intl.NumberFormat('en-US', {notation:'compact'}).format(data.total_market_cap.usd * TZS_RATE)} TZS</span> | Kasi (Vol): <span>${new Intl.NumberFormat('en-US', {notation:'compact'}).format(data.total_volume.usd * TZS_RATE)} TZS</span></div>`;
+                <div class="container">Global Cap: <span>${new Intl.NumberFormat('en-US', {notation:'compact'}).format(data.total_market_cap.usd * TZS_RATE)} TZS</span> | 24h Vol: <span>${new Intl.NumberFormat('en-US', {notation:'compact'}).format(data.total_volume.usd * TZS_RATE)} TZS</span></div>`;
         }
 
         init();
@@ -240,4 +254,3 @@
     </script>
 </body>
 </html>
-
