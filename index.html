@@ -201,29 +201,31 @@
         <p>Built for Tanzania 🇹🇿 | Data by CoinGecko</p>
     </footer>
 
-    <script>
-        // Use 'sparkline=true' to get the 7-day data
-        const API_URL = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=tzs&order=market_cap_desc&per_page=50&page=1&sparkline=true&price_change_percentage=24h';
+        <script>
+        // API Config: reduced to 20 coins for speed
+        const API_URL = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=tzs&order=market_cap_desc&per_page=20&page=1&sparkline=true&price_change_percentage=24h';
         
-        let allCoins = []; // Store data for searching
+        const CACHE_KEY = 'coinkili_data_v1';
+        const CACHE_DURATION = 60 * 1000; // 1 minute cache validity
+        
+        let allCoins = []; 
 
-        // Formatting Helpers
+        // Helpers
         const formatTZS = (num) => new Intl.NumberFormat('en-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(num);
         const formatCompact = (num) => new Intl.NumberFormat('en-US', { notation: "compact", compactDisplay: "short" }).format(num);
 
-        // --- SPARKLINE GENERATOR (The "Pro" feature) ---
-        // Converts array of prices into an SVG path string
+        // Sparkline Generator
         function createSparkline(data, isUp) {
+            if (!data || data.length === 0) return ''; // Handle empty data
             const width = 100; 
             const height = 35;
             const min = Math.min(...data);
             const max = Math.max(...data);
             const range = max - min;
             
-            // Map points to SVG coordinates
             const points = data.map((price, index) => {
                 const x = (index / (data.length - 1)) * width;
-                const y = height - ((price - min) / range) * height; // Invert Y because SVG 0 is top
+                const y = height - ((price - min) / range) * height; 
                 return `${x},${y}`;
             }).join(' ');
 
@@ -232,32 +234,77 @@
         }
 
         async function init() {
+            const loader = document.getElementById('loader');
+            
+            // 1. Try to load from Cache first (Instant load)
+            const cachedData = localStorage.getItem(CACHE_KEY);
+            if (cachedData) {
+                const { timestamp, coins } = JSON.parse(cachedData);
+                // If we have data, show it immediately!
+                if (coins.length > 0) {
+                    allCoins = coins;
+                    renderTable(allCoins);
+                    loader.style.display = 'none'; // Hide loader immediately
+                }
+            }
+
+            // 2. Fetch fresh data from API
             try {
+                // If we didn't have cache, ensure loader is visible
+                if (allCoins.length === 0) loader.style.display = 'block';
+
                 const res = await fetch(API_URL);
-                allCoins = await res.json();
+                
+                // Handle "Too Many Requests" (Rate Limit)
+                if (res.status === 429) {
+                    throw new Error("API Limit Reached. Please wait.");
+                }
+
+                const freshData = await res.json();
+                
+                // Update Global Data
+                allCoins = freshData;
                 renderTable(allCoins);
-                document.getElementById('loader').style.display = 'none';
+                
+                // Save to Cache
+                localStorage.setItem(CACHE_KEY, JSON.stringify({
+                    timestamp: Date.now(),
+                    coins: freshData
+                }));
+
+                loader.style.display = 'none';
+
             } catch (err) {
                 console.error(err);
+                // Only show error if we have NO data on screen
+                if (allCoins.length === 0) {
+                    loader.innerHTML = `
+                        <div style="color: var(--down-color);">
+                            <i class="fas fa-exclamation-circle"></i> Unable to load. <br>
+                            <button onclick="location.reload()" style="margin-top:10px; padding:8px 16px; background:var(--surface-color); border:1px solid var(--border-color); border-radius:8px; color:var(--text-primary);">Try Again</button>
+                        </div>
+                    `;
+                }
             }
         }
 
         function renderTable(coins) {
             const tbody = document.getElementById('crypto-table');
-            tbody.innerHTML = ''; // Clear current
+            tbody.innerHTML = ''; 
 
             coins.forEach(coin => {
                 const tr = document.createElement('tr');
                 const isUp = coin.price_change_percentage_24h >= 0;
                 
-                // Generate the mini chart
-                const chartSvg = createSparkline(coin.sparkline_in_7d.price, isUp);
+                // Sparkline safety check
+                const sparklineData = coin.sparkline_in_7d ? coin.sparkline_in_7d.price : [];
+                const chartSvg = createSparkline(sparklineData, isUp);
 
                 tr.innerHTML = `
                     <td>${coin.market_cap_rank}</td>
                     <td>
                         <div class="coin-flex">
-                            <img src="${coin.image}" class="coin-icon" alt="">
+                            <img src="${coin.image}" class="coin-icon" alt="${coin.name}">
                             <div>
                                 <span>${coin.name}</span>
                                 <span class="coin-symbol">${coin.symbol.toUpperCase()}</span>
@@ -286,7 +333,9 @@
             renderTable(filtered);
         });
 
+        // Start
         init();
     </script>
+
 </body>
 </html>
