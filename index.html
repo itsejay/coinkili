@@ -1,325 +1,366 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CoinKili – Crypto Prices in TZS</title>  <!-- Google Fonts -->  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">  <!-- Icons -->  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />  <style>
-    :root {
-      --bg: #f5f7fb;
-      --card: #ffffff;
-      --text: #0f172a;
-      --muted: #64748b;
-      --primary: #2563eb;
-      --accent: #16a34a;
-      --border: #e5e7eb;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoinKili 🇹🇿 | Tanzania's Crypto Tracker</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0b1220; /* CoinMarketCap-style dark blue */
-        --card: #0f172a;
-        --text: #e5e7eb;
-        --muted: #94a3b8;
-        --primary: #3b82f6;
-        --accent: #22c55e;
-        --border: #1e293b;
-      }
-    }
+    <style>
+        /* --- CSS VARIABLES & THEME CONFIGURATION --- */
+        :root {
+            /* Light Theme (Default) */
+            --bg-color: #ffffff;
+            --surface-color: #f8fafd;
+            --text-primary: #000000;
+            --text-secondary: #58667e;
+            --border-color: #eff2f5;
+            --accent-color: #3861fb; /* CoinMarketCap Blue */
+            --up-color: #16c784;     /* Green */
+            --down-color: #ea3943;   /* Red */
+            --hover-bg: #f8fafl;
+            --card-shadow: 0 4px 24px rgba(0,0,0,0.05);
+        }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+        /* Auto-Detect System Dark Mode */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                /* CMC Style Dark Theme */
+                --bg-color: #0d1421;    /* Deep Dark Blue/Black */
+                --surface-color: #171924; /* Slightly lighter card bg */
+                --text-primary: #ffffff;
+                --text-secondary: #a1a7bb;
+                --border-color: #222531;
+                --accent-color: #3861fb;
+                --hover-bg: #171924;
+                --card-shadow: 0 4px 24px rgba(0,0,0,0.4);
+            }
+        }
 
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-    header {
-      border-bottom: 1px solid var(--border);
-      background: var(--card);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+        /* --- LAYOUT & HEADER --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
 
-    .container {
-      width: 100%;
-      max-width: 1200px;
-      margin: auto;
-      padding: 0 16px;
-    }
+        header {
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 0;
+            background: var(--bg-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 64px;
-    }
+        .nav-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 800;
-      font-size: 1.25rem;
-    }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-    .logo span {
-      color: var(--primary);
-    }
+        .logo span {
+            color: var(--accent-color);
+        }
 
-    .nav-links {
-      display: flex;
-      gap: 20px;
-      font-weight: 500;
-    }
+        .status-pill {
+            font-size: 0.8rem;
+            background: rgba(56, 97, 251, 0.1);
+            color: var(--accent-color);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
 
-    .hero {
-      padding: 60px 0 40px;
-    }
+        /* --- HERO SECTION --- */
+        .hero {
+            padding: 40px 0;
+            text-align: center;
+        }
 
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 40px;
-      align-items: center;
-    }
+        .hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #3861fb, #16c784);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    .hero h1 {
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 900;
-      margin-bottom: 16px;
-    }
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
-    .hero p {
-      color: var(--muted);
-      max-width: 520px;
-      margin-bottom: 24px;
-    }
+        /* --- MARKET TABLE --- */
+        .market-section {
+            margin-bottom: 50px;
+        }
 
-    .cta {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
+        .table-container {
+            overflow-x: auto; /* Scroll on mobile */
+            background: var(--bg-color);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+        }
 
-    .btn {
-      padding: 12px 20px;
-      border-radius: 12px;
-      font-weight: 600;
-      border: 1px solid var(--border);
-      background: var(--card);
-      cursor: pointer;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
 
-    .btn.primary {
-      background: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
-    }
+        th {
+            text-align: left;
+            padding: 15px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky; /* Keep headers visible */
+            top: 0;
+            background: var(--bg-color);
+        }
 
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px;
-      margin-top: 32px;
-    }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
 
-    .stat {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
-    }
+        tr:hover {
+            background-color: var(--surface-color);
+        }
 
-    .stat h3 {
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
+        .coin-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    .stat p {
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-top: 4px;
-    }
+        .coin-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
 
-    section {
-      margin-top: 60px;
-    }
+        .symbol {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 400;
+            text-transform: uppercase;
+        }
 
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
+        .percent-change {
+            font-weight: 600;
+        }
 
-    .section-title h2 {
-      font-size: 1.5rem;
-      font-weight: 800;
-    }
+        .up { color: var(--up-color); }
+        .down { color: var(--down-color); }
 
-    .table {
-      width: 100%;
-      border-collapse: collapse;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-    }
+        /* --- INFO SECTION --- */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
 
-    .table th, .table td {
-      padding: 14px;
-      border-bottom: 1px solid var(--border);
-      text-align: left;
-      font-size: 0.95rem;
-    }
+        .info-card {
+            background: var(--surface-color);
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
 
-    .table th {
-      color: var(--muted);
-      font-weight: 600;
-      background: rgba(0,0,0,0.02);
-    }
+        .info-card h3 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
 
-    .coin {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 600;
-    }
+        /* --- FOOTER --- */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 30px 0;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
 
-    .coin img {
-      width: 24px;
-      height: 24px;
-    }
+        /* --- LOADER --- */
+        #loader {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
 
-    .positive { color: var(--accent); }
-    .negative { color: #ef4444; }
-
-    footer {
-      margin: 80px 0 40px;
-      color: var(--muted);
-      text-align: center;
-      font-size: 0.9rem;
-    }
-
-    @media (max-width: 900px) {
-      .hero-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style></head>
-<body>  <header>
-    <div class="container nav">
-      <div class="logo">
-        <i class="fa-solid fa-coins"></i>
-        Coin<span>Kili</span>
-      </div>
-      <nav class="nav-links">
-        <a href="#">Markets</a>
-        <a href="#">Learn</a>
-        <a href="#">Trends</a>
-        <a href="#">About</a>
-      </nav>
-    </div>
-  </header>  <main class="container"><section class="hero">
-  <div class="hero-grid">
-    <div>
-      <h1>Crypto prices in Tanzanian Shillings 🇹🇿</h1>
-      <p>
-        CoinKili brings cryptocurrency closer to Tanzanians. Track prices in TZS,
-        learn how crypto works, and follow what’s trending – all in one clean,
-        beautiful platform.
-      </p>
-      <div class="cta">
-        <button class="btn primary">View Market</button>
-        <button class="btn">Learn Crypto</button>
-      </div>
-
-      <div class="stats">
-        <div class="stat">
-          <h3>Total Market Cap (TZS)</h3>
-          <p>TZS —</p>
+    <header>
+        <div class="container nav-flex">
+            <a href="#" class="logo">
+                <i class="fa-solid fa-coins" style="color: #F7931A;"></i> 
+                Coin<span>Kili</span> 🇹🇿
+            </a>
+            <div class="status-pill">Beta v1.0</div>
         </div>
-        <div class="stat">
-          <h3>24h Volume</h3>
-          <p>TZS —</p>
-        </div>
-        <div class="stat">
-          <h3>BTC Dominance</h3>
-          <p>— %</p>
-        </div>
-      </div>
+    </header>
+
+    <div class="container hero">
+        <h1>Karibu Crypto Tanzania</h1>
+        <p>Real-time cryptocurrency prices in Tanzanian Shillings (TZS). Track the market, spot the trends, and learn why crypto is the future.</p>
     </div>
 
-    <div class="stat">
-      <h3>Why CoinKili?</h3>
-      <p style="font-size:1rem; font-weight:500; margin-top:10px; color:var(--muted)">
-        • Prices in TZS<br>
-        • Built for Tanzanians<br>
-        • Beginner-friendly education<br>
-        • Future buy & sell platform
-      </p>
+    <div class="container market-section">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Coin</th>
+                        <th>Price (TZS)</th>
+                        <th>24h %</th>
+                        <th>Mkt Cap</th>
+                    </tr>
+                </thead>
+                <tbody id="crypto-table">
+                    </tbody>
+            </table>
+            <div id="loader"><i class="fas fa-spinner fa-spin"></i> Loading Market Data...</div>
+        </div>
     </div>
-  </div>
-</section>
 
-<section>
-  <div class="section-title">
-    <h2>Top Cryptocurrencies</h2>
-    <span class="muted">USD ⇄ TZS</span>
-  </div>
+    <div class="container info-grid">
+        <div class="info-card">
+            <h3><i class="fas fa-fire" style="color: orange;"></i> Trending in TZ</h3>
+            <p>Bitcoin (BTC) and USDT are currently the most traded assets in Dar es Salaam. Watch out for emerging altcoins gaining traction in East Africa.</p>
+        </div>
+        <div class="info-card">
+            <h3><i class="fas fa-university" style="color: #3861fb;"></i> Why Invest?</h3>
+            <p>Cryptocurrency offers Tanzanians a hedge against inflation and a way to transact globally without high banking fees. Start small, learn fast.</p>
+        </div>
+        <div class="info-card">
+            <h3><i class="fas fa-user-secret" style="color: #16c784;"></i> Whale Watch</h3>
+            <p>Institutional interest is growing. We track large wallet movements to give you an edge on where the smart money is flowing.</p>
+        </div>
+    </div>
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Coin</th>
-        <th>Price (TZS)</th>
-        <th>24h %</th>
-        <th>Market Cap</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td class="coin">
-          <img src="https://assets.coingecko.com/coins/images/1/small/bitcoin.png" />
-          Bitcoin
-        </td>
-        <td>TZS —</td>
-        <td class="positive">+—%</td>
-        <td>TZS —</td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td class="coin">
-          <img src="https://assets.coingecko.com/coins/images/279/small/ethereum.png" />
-          Ethereum
-        </td>
-        <td>TZS —</td>
-        <td class="negative">—%</td>
-        <td>TZS —</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 CoinKili. Built with ❤️ for Tanzania.</p>
+            <p style="font-size: 0.8rem; margin-top:5px;">Data provided by CoinGecko API</p>
+        </div>
+    </footer>
 
-<footer>
-  Built with ❤️ in Tanzania · CoinKili © 2025<br />
-  Data powered by public crypto APIs
-</footer>
+    <script>
+        // API Configuration (CoinGecko)
+        // We request prices in TZS directly
+        const API_URL = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=tzs&order=market_cap_desc&per_page=20&page=1&sparkline=false';
 
-  </main></body>
-    </html>
+        // Format Currency (TZS)
+        const formatTZS = (price) => {
+            return new Intl.NumberFormat('en-TZ', {
+                style: 'currency',
+                currency: 'TZS',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(price);
+        };
+
+        // Format Large Numbers (Market Cap)
+        const formatCompact = (number) => {
+            return new Intl.NumberFormat('en-US', {
+                notation: "compact",
+                compactDisplay: "short"
+            }).format(number);
+        };
+
+        async function fetchCryptoData() {
+            const tableBody = document.getElementById('crypto-table');
+            const loader = document.getElementById('loader');
+
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+
+                loader.style.display = 'none'; // Hide loader
+
+                data.forEach((coin) => {
+                    const row = document.createElement('tr');
+                    
+                    // Determine color for 24h change
+                    const changeClass = coin.price_change_percentage_24h >= 0 ? 'up' : 'down';
+                    const changeIcon = coin.price_change_percentage_24h >= 0 ? '▲' : '▼';
+
+                    row.innerHTML = `
+                        <td style="color: var(--text-secondary);">${coin.market_cap_rank}</td>
+                        <td>
+                            <div class="coin-name">
+                                <img src="${coin.image}" alt="${coin.name}" class="coin-icon">
+                                <div>
+                                    <span>${coin.name}</span>
+                                    <span class="symbol">${coin.symbol}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${formatTZS(coin.current_price)}</td>
+                        <td class="percent-change ${changeClass}">
+                            ${Math.abs(coin.price_change_percentage_24h).toFixed(2)}%
+                        </td>
+                        <td style="color: var(--text-secondary);">${formatCompact(coin.market_cap)}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+            } catch (error) {
+                loader.innerHTML = "Failed to load data. Please refresh.";
+                console.error("Error fetching data:", error);
+            }
+        }
+
+        // Initialize
+        fetchCryptoData();
+
+    </script>
+</body>
+</html>
+
