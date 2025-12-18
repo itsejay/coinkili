@@ -16,7 +16,6 @@
             --text-secondary: #58667e; --border-color: #eff2f5; --accent-color: #3861fb;
             --up-color: #16c784; --down-color: #ea3943; --sticky-bg: #ffffff; --ticker-bg: #f0f3fa;
         }
-
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg-color: #0d1421; --surface-color: #171924; --text-primary: #ffffff;
@@ -28,78 +27,78 @@
         body { background-color: var(--bg-color); color: var(--text-primary); transition: 0.3s; line-height: 1.5; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
 
-        /* TICKERS & STATS */
+        /* TICKERS */
         .global-stats { background: var(--bg-color); border-bottom: 1px solid var(--border-color); padding: 8px 0; font-size: 0.7rem; color: var(--text-secondary); display: flex; overflow-x: auto; white-space: nowrap; }
         .stat-item span { color: var(--accent-color); font-weight: 600; margin-left: 4px; }
-        
         .whale-ticker { background: var(--ticker-bg); color: var(--text-secondary); font-size: 0.75rem; padding: 8px 0; overflow: hidden; white-space: nowrap; border-bottom: 1px solid var(--border-color); }
         .ticker-track { display: inline-block; animation: marquee 45s linear infinite; }
         .ticker-item { display: inline-block; padding: 0 30px; }
-        .ticker-item span { color: var(--accent-color); font-weight: 700; }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         header { border-bottom: 1px solid var(--border-color); padding: 15px 0; background: var(--bg-color); position: sticky; top: 0; z-index: 1000; }
-        .logo { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); text-decoration: none; }
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); text-decoration: none; display: flex; align-items: center; gap: 8px; }
         .logo span { color: var(--accent-color); }
 
-        .hero { padding: 30px 0; text-align: center; }
-        .hero h1 { font-size: 2rem; margin-bottom: 8px; background: linear-gradient(90deg, #3861fb, #16c784); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero { padding: 40px 0; text-align: center; }
+        .hero h1 { font-size: 2.2rem; margin-bottom: 10px; background: linear-gradient(90deg, #3861fb, #16c784); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
 
         /* HIGHLIGHTS */
         .highlights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .hl-card { background: var(--surface-color); padding: 18px; border-radius: 12px; border: 1px solid var(--border-color); }
-        .highlights-title { font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-        .hl-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-top: 8px; }
+        .hl-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-top: 8px; font-weight: 600; }
 
         /* SEARCH & TABLE */
         .search-container { margin-bottom: 20px; position: relative; }
         #coin-search { width: 100%; padding: 12px 45px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--surface-color); color: var(--text-primary); outline: none; }
         .search-container i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
 
-        .table-container { overflow-x: auto; background: var(--bg-color); border-radius: 12px; border: 1px solid var(--border-color); }
+        .table-container { overflow-x: auto; background: var(--bg-color); border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 40px; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; }
-        th { text-align: right; padding: 12px; font-size: 0.7rem; color: var(--text-secondary); border-bottom: 1px solid var(--border-color); text-transform: uppercase; }
-        td { padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; font-weight: 600; text-align: right; }
-        
-        /* Sticky Coin Column */
+        th { text-align: right; padding: 15px; font-size: 0.75rem; color: var(--text-secondary); border-bottom: 1px solid var(--border-color); text-transform: uppercase; }
+        td { padding: 15px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; font-weight: 600; text-align: right; }
         th:nth-child(2), td:nth-child(2) { position: sticky; left: 0; background: var(--sticky-bg); z-index: 5; text-align: left; min-width: 150px; border-right: 1px solid var(--border-color); }
         
-        .coin-flex { display: flex; align-items: center; gap: 8px; }
-        .coin-icon { width: 22px; height: 22px; border-radius: 50%; }
-        .up { color: var(--up-color); } .down { color: var(--down-color); }
-        .sparkline { width: 70px; height: 25px; }
-        path { fill: none; stroke-width: 2; }
+        /* RESTORED INFO CARDS */
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 50px; }
+        .info-card { background: var(--surface-color); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); }
+        .info-card h3 { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-size: 1.1rem; }
+        .info-card p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; }
 
-        footer { padding: 40px 0; text-align: center; color: var(--text-secondary); font-size: 0.8rem; }
+        footer { border-top: 1px solid var(--border-color); padding: 40px 0; text-align: center; color: var(--text-secondary); font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
-    <div class="global-stats"><div class="container" id="global-box">Loading Global Stats...</div></div>
+    <div class="global-stats"><div class="container" id="global-box">Loading Global Market Stats...</div></div>
     <div class="whale-ticker"><div class="ticker-track" id="whale-track"></div></div>
 
-    <header><div class="container"><a href="#" class="logo">Coin<span>Kili</span> 🇹🇿</a></div></header>
+    <header>
+        <div class="container">
+            <a href="#" class="logo"><i class="fa-solid fa-coins" style="color: #F7931A;"></i> Coin<span>Kili</span> 🇹🇿</a>
+        </div>
+    </header>
 
     <div class="container hero">
         <h1>Karibu Crypto Tanzania</h1>
-        <p>Real-time data for the Top 100 coins in TZS.</p>
+        <p>Real-time prices and analytics for the Top 100 assets, custom-calculated for the Tanzanian market.</p>
     </div>
 
     <div class="container">
         <div class="highlights-grid">
             <div class="hl-card">
-                <div class="highlights-title"><i class="fas fa-rocket" style="color:#16c784"></i> Top 3 Gainers (24h)</div>
+                <div style="font-size:0.8rem; font-weight:700; color:var(--text-secondary)"><i class="fas fa-rocket" style="color:#16c784"></i> TOP GAINERS (24H)</div>
                 <div id="gainers-list">...</div>
             </div>
             <div class="hl-card">
-                <div class="highlights-title"><i class="fas fa-chart-line" style="color:#3861fb"></i> Top 3 Market Cap</div>
+                <div style="font-size:0.8rem; font-weight:700; color:var(--text-secondary)"><i class="fas fa-crown" style="color:#FFD700"></i> TOP MARKET CAP</div>
                 <div id="mcap-list">...</div>
             </div>
         </div>
 
         <div class="search-container">
             <i class="fas fa-search"></i>
-            <input type="text" id="coin-search" placeholder="Search 100 coins...">
+            <input type="text" id="coin-search" placeholder="Search across 100 coins...">
         </div>
 
         <div class="table-container">
@@ -107,16 +106,30 @@
                 <thead><tr><th>#</th><th>Coin</th><th>Price (TZS)</th><th>24h %</th><th>7d Chart</th><th>Market Cap</th></tr></thead>
                 <tbody id="crypto-table"></tbody>
             </table>
-            <div id="loader" style="text-align:center; padding:40px;"><i class="fas fa-spinner fa-spin"></i> Loading Market Data...</div>
+            <div id="loader" style="text-align:center; padding:50px;"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Syncing Live Data...</div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h3><i class="fas fa-fire" style="color: orange;"></i> Trending in TZ</h3>
+                <p>Bitcoin (BTC) and USDT remain the pillars of the Tanzanian crypto scene. Watch for high-utility coins like Solana gaining ground.</p>
+            </div>
+            <div class="info-card">
+                <h3><i class="fas fa-university" style="color: #3861fb;"></i> Why These 100?</h3>
+                <p>We provide the full Top 100 list to give you a complete view of the global market. All prices are auto-converted to TZS for your convenience.</p>
+            </div>
+            <div class="info-card">
+                <h3><i class="fas fa-user-secret" style="color: #16c784;"></i> Smart Money</h3>
+                <p>Whales often move first in the top 100. By tracking these leaders, you get a clearer picture of where the global market is headed.</p>
+            </div>
         </div>
     </div>
 
-    <footer>&copy; 2025 CoinKili. Powered by CoinGecko API.</footer>
+    <footer><p>&copy; 2025 CoinKili Tanzania. Built for the crypto community.</p></footer>
 
     <script>
         let allCoins = [];
         const TZS_RATE = 2715;
-        // Optimization: Use USD to fetch 100 coins (much faster) then convert in code
         const API_URL = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=24h`;
         const GLOBAL_URL = `https://api.coingecko.com/api/v3/global`;
 
@@ -125,7 +138,7 @@
 
         function createSparkline(data, isUp) {
             if(!data) return '';
-            const width = 70, height = 25;
+            const width = 80, height = 30;
             const min = Math.min(...data), max = Math.max(...data), range = (max - min) || 1;
             const points = data.map((p, i) => `${(i/(data.length-1))*width},${height-((p-min)/range)*height}`).join(' ');
             return `<svg class="sparkline"><path d="M ${points}" stroke="${isUp?'#16c784':'#ea3943'}" /></svg>`;
@@ -134,8 +147,8 @@
         async function start() {
             fetchGlobal();
             fetchMarket();
-            // Whale alerts
-            document.getElementById('whale-track').innerHTML = Array(10).fill('<div class="ticker-item"><span>ALERT:</span> Whale moved 500 BTC to Binance</div>').join('');
+            const alerts = ["Whale moved 2,000 BTC to Binance", "100M USDT minted at Tether Treasury", "50,000 ETH moved to Unknown Wallet", "Whale Alert: 5,000,000 XRP transfer detected"];
+            document.getElementById('whale-track').innerHTML = alerts.concat(alerts).map(a => `<div class="ticker-item"><i class="fas fa-whale"></i> <span style="color:var(--accent-color); font-weight:700">ALERT:</span> ${a}</div>`).join('');
         }
 
         async function fetchGlobal() {
@@ -143,8 +156,8 @@
                 const res = await fetch(GLOBAL_URL);
                 const { data } = await res.json();
                 document.getElementById('global-box').innerHTML = `
-                    <div class="stat-item">Market Cap: <span>${formatTZS(data.total_market_cap.usd / TZS_RATE)}</span></div>
-                    <div class="stat-item">24h Vol: <span>${formatTZS(data.total_volume.usd / TZS_RATE)}</span></div>
+                    <div class="stat-item">Global Market Cap: <span>${formatTZS(data.total_market_cap.usd / TZS_RATE)}</span></div>
+                    <div class="stat-item">24h Volume: <span>${formatTZS(data.total_volume.usd / TZS_RATE)}</span></div>
                     <div class="stat-item">BTC Dominance: <span>${data.market_cap_percentage.btc.toFixed(1)}%</span></div>
                 `;
             } catch(e) {}
@@ -155,23 +168,21 @@
                 const res = await fetch(API_URL);
                 if(!res.ok) throw new Error();
                 allCoins = await res.json();
-                renderAll(allCoins);
+                renderUI(allCoins);
                 document.getElementById('loader').style.display = 'none';
             } catch (e) {
-                document.getElementById('loader').innerHTML = "Market busy. Retrying...";
+                document.getElementById('loader').innerHTML = "Market servers busy. Refreshing...";
                 setTimeout(fetchMarket, 5000);
             }
         }
 
-        function renderAll(coins) {
-            // Highlights
+        function renderUI(coins) {
             const gainers = [...coins].sort((a,b) => b.price_change_percentage_24h - a.price_change_percentage_24h).slice(0,3);
-            const top3 = coins.slice(0,3);
+            const mcap = coins.slice(0,3);
 
-            document.getElementById('gainers-list').innerHTML = gainers.map(c => `<div class="hl-row"><span>${c.name}</span><span class="up">+${c.price_change_percentage_24h.toFixed(1)}%</span></div>`).join('');
-            document.getElementById('mcap-list').innerHTML = top3.map(c => `<div class="hl-row"><span>${c.name}</span><span>${formatCompact(c.market_cap / TZS_RATE)}</span></div>`).join('');
+            document.getElementById('gainers-list').innerHTML = gainers.map(c => `<div class="hl-row"><span>${c.name}</span><span class="${c.price_change_percentage_24h>=0?'up':'down'}">${c.price_change_percentage_24h>=0?'+':''}${c.price_change_percentage_24h.toFixed(1)}%</span></div>`).join('');
+            document.getElementById('mcap-list').innerHTML = mcap.map(c => `<div class="hl-row"><span>${c.name}</span><span style="color:var(--text-secondary)">${formatCompact(c.market_cap / TZS_RATE)}</span></div>`).join('');
 
-            // Table
             const tbody = document.getElementById('crypto-table');
             tbody.innerHTML = coins.map(c => {
                 const isUp = c.price_change_percentage_24h >= 0;
@@ -189,10 +200,11 @@
         document.getElementById('coin-search').addEventListener('input', (e) => {
             const val = e.target.value.toLowerCase();
             const filtered = allCoins.filter(c => c.name.toLowerCase().includes(val) || c.symbol.toLowerCase().includes(val));
-            renderAll(filtered);
+            renderUI(filtered);
         });
 
         start();
+        setInterval(fetchMarket, 60000);
     </script>
 </body>
 </html>
