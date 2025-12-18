@@ -13,31 +13,33 @@
             --table-bg: #1e1e1e;
             --accent: #00ff88;
             --card-bg: #222;
+            --navbar-bg: #1e1e1e;
         }
-        body.light {
-            --bg: #f8f9fa;
-            --text: #212529;
-            --table-bg: #ffffff;
-            --accent: #00aa66;
-            --card-bg: #e9ecef;
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg: #f8f9fa;
+                --text: #212529;
+                --table-bg: #ffffff;
+                --accent: #00aa66;
+                --card-bg: #e9ecef;
+                --navbar-bg: #ffffff;
+            }
         }
-        body { background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
-        .table-dark { --bs-table-bg: var(--table-bg); }
-        .navbar { background: var(--card-bg) !important; }
+        body { background: var(--bg); color: var(--text); transition: background 0.5s, color 0.5s; }
+        .table { --bs-table-bg: var(--table-bg); background: var(--table-bg); }
+        .navbar { background: var(--navbar-bg) !important; border-bottom: 1px solid var(--accent); }
         .btn-outline-success { border-color: var(--accent); color: var(--accent); }
         .btn-outline-success:hover { background: var(--accent); color: #000; }
         .text-success { color: var(--accent) !important; }
-        .currency-toggle, .theme-toggle { margin: 20px 0; text-align: center; }
+        .currency-toggle { margin: 20px 0; text-align: center; }
+        .lead { font-size: 1.2em; }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="index.html">CoinKili 🇹🇿</a>
-            <div>
-                <button id="toggleTZ" class="btn btn-outline-success me-2">Switch to TZS</button>
-                <button id="toggleTheme" class="btn btn-outline-success">Light Mode</button>
-            </div>
+            <button id="toggleTZ" class="btn btn-outline-success">Switch to TZS</button>
         </div>
     </nav>
 
@@ -45,8 +47,8 @@
         <h1 class="text-center">CoinKili</h1>
         <p class="lead text-center">Live cryptocurrency prices in USD and Tanzanian Shillings (TZS)<br>Made for Tanzania 🚀</p>
         
-        <table class="table table-dark table-hover" id="cryptoTable">
-            <thead>
+        <table class="table table-hover" id="cryptoTable">
+            <thead class="table-dark">
                 <tr>
                     <th>Rank</th>
                     <th>Name</th>
@@ -66,21 +68,27 @@
         let usdToTzs = 2700;
         let useTzs = false;
 
-        fetch('https://api.exchangerate.host/latest?base=USD&symbols=TZS')
-            .then(res => res.json())
-            .then(data => usdToTzs = data.rates.TZS || 2700);
+        async function loadData() {
+            // Get TZS rate
+            try {
+                const rateRes = await fetch('https://api.exchangerate.host/latest?base=USD&symbols=TZS');
+                const rateData = await rateRes.json();
+                usdToTzs = rateData.rates.TZS || 2700;
+            } catch (e) { console.log('TZ rate fallback'); }
 
-        fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true')
-            .then(res => res.json())
-            .then(coins => {
+            // Get coins
+            try {
+                const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true');
+                const coins = await res.json();
                 const tbody = document.querySelector('#cryptoTable tbody');
+                tbody.innerHTML = ''; // Clear
                 coins.forEach(coin => {
                     const row = document.createElement('tr');
                     const price = useTzs ? (coin.current_price * usdToTzs).toFixed(0) + ' TZS' : '$' + coin.current_price.toFixed(2);
                     const marketCap = useTzs ? (coin.market_cap * usdToTzs / 1e9).toFixed(2) + 'B TZS' : '$' + (coin.market_cap / 1e9).toFixed(2) + 'B';
                     row.innerHTML = `
                         <td>${coin.market_cap_rank}</td>
-                        <td><img src="${coin.image}" width="24" height="24"> ${coin.name}</td>
+                        <td><img src="\( {coin.image}" width="24" height="24" alt=" \){coin.name}"> ${coin.name}</td>
                         <td>${coin.symbol.toUpperCase()}</td>
                         <td>${price}</td>
                         <td class="\( {coin.price_change_percentage_24h > 0 ? 'text-success' : 'text-danger'}"> \){coin.price_change_percentage_24h?.toFixed(2)}%</td>
@@ -90,32 +98,25 @@
                     `;
                     tbody.appendChild(row);
 
+                    // Sparkline (color auto from theme)
                     const ctx = row.querySelector('.sparkline').getContext('2d');
+                    const lineColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
                     new Chart(ctx, {
                         type: 'line',
-                        data: { datasets: [{ data: coin.sparkline_in_7d.price, borderColor: document.body.classList.contains('light') ? '#00aa66' : '#00ff88', fill: false, tension: 0.4, borderWidth: 2 }] },
+                        data: { datasets: [{ data: coin.sparkline_in_7d.price, borderColor: lineColor, fill: false, tension: 0.4, borderWidth: 2 }] },
                         options: { scales: { y: { display: false }, x: { display: false } }, elements: { point: { radius: 0 } }, plugins: { legend: { display: false } } }
                     });
                 });
-            });
+            } catch (e) { console.log('API error'); }
+        }
 
-        // Currency toggle
+        loadData(); // Load on start
+
+        // Currency toggle (no reload)
         document.getElementById('toggleTZ').addEventListener('click', () => {
             useTzs = !useTzs;
             document.getElementById('toggleTZ').textContent = useTzs ? 'Switch to USD' : 'Switch to TZS';
-            location.reload();
-        });
-
-        // Theme toggle
-        const toggleTheme = document.getElementById('toggleTheme');
-        if (localStorage.getItem('theme') === 'light') document.body.classList.add('light');
-        toggleTheme.textContent = document.body.classList.contains('light') ? 'Dark Mode' : 'Light Mode';
-
-        toggleTheme.addEventListener('click', () => {
-            document.body.classList.toggle('light');
-            toggleTheme.textContent = document.body.classList.contains('light') ? 'Dark Mode' : 'Light Mode';
-            localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
-            location.reload(); // Reload to update chart colors
+            loadData(); // Reload data with new currency
         });
     </script>
 </body>
