@@ -3,181 +3,309 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoinKili 🇹🇿 | Karibu Crypto Hub</title>
+    <title>CoinKili | Real-time Crypto Prices</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --bg: #ffffff; --surf: #f0f7ff; --text: #0d1e3c; --sec: #58667e;
-            --brd: #e2e8f0; --acc: #0070f3; --up: #16c784; --down: #ea3943;
-            --grad: linear-gradient(135deg, #0070f3 0%, #00dfd8 100%);
-            --card-blue: #eef2ff; --card-orange: #fff7ed; --card-green: #f0fdf4;
+            --bg: #ffffff; --surf: #f8fafc; --text: #0f172a; --sec: #64748b;
+            --brd: #e2e8f0; --acc: #0070f3; --acc-glow: #00dfd8;
+            --up: #16c784; --down: #ea3943;
+            --nav-h: 60px;
         }
         @media (prefers-color-scheme: dark) {
             :root { 
-                --bg: #060b13; --surf: #0d1421; --text: #ffffff; --sec: #a1a7bb; --brd: #1e293b; 
-                --card-blue: #1e293b; --card-orange: #2d2016; --card-green: #142d1f;
+                --bg: #0b1221; --surf: #151e32; --text: #ffffff; --sec: #94a3b8; --brd: #1e293b; 
             }
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); font-size: 13px; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--text); font-size: 13px; padding-bottom: 80px; } /* Pad for bottom nav */
+        
+        .container { max-width: 800px; margin: 0 auto; padding: 0 16px; }
+        
+        /* --- APP HEADER --- */
+        .app-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 16px; background: var(--bg);
+            position: sticky; top: 0; z-index: 100;
+            border-bottom: 1px solid var(--brd);
+        }
+        .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-svg { width: 32px; height: 32px; fill: url(#blue-grad); }
+        .brand-name { font-size: 18px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; }
+        .header-icons { display: flex; gap: 20px; color: var(--sec); font-size: 18px; }
 
-        /* HEADER & HERO (UNTOUCHED COLORS) */
-        header { background: var(--grad); padding: 18px 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0, 112, 243, 0.2); }
-        .nav-content { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.5rem; font-weight: 800; text-decoration: none; color: white; display: flex; align-items: center; gap: 8px; }
-        .lang-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); padding: 8px 16px; border-radius: 25px; font-size: 12px; cursor: pointer; color: white; font-weight: 700; }
+        /* --- GLOBAL MARKET CARD --- */
+        .global-card { margin: 16px; padding: 20px; background: linear-gradient(135deg, var(--surf) 0%, var(--bg) 100%); border: 1px solid var(--brd); border-radius: 16px; }
+        .gc-label { font-size: 11px; color: var(--sec); font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
+        .gc-val { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+        .gc-change { font-size: 13px; font-weight: 600; padding: 2px 8px; border-radius: 6px; }
+        .gc-change.pos { background: rgba(22, 199, 132, 0.1); color: var(--up); }
+        
+        /* --- HIGHLIGHTS SECTION --- */
+        .section-head { display: flex; justify-content: space-between; align-items: center; margin: 24px 16px 12px; }
+        .sec-title { font-size: 16px; font-weight: 700; }
+        .view-more { font-size: 12px; color: var(--acc); font-weight: 600; text-decoration: none; }
 
-        .hero { padding: 50px 0; text-align: left; background: var(--surf); border-bottom: 1px solid var(--brd); margin-bottom: 30px; }
-        .hero h1 { font-size: 2.2rem; margin-bottom: 10px; font-weight: 800; }
-        .hero p { color: var(--sec); font-size: 1.1rem; max-width: 700px; line-height: 1.6; }
+        .highlights-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 0 16px 10px; scrollbar-width: none; }
+        .hl-card { min-width: 260px; background: var(--surf); padding: 16px; border-radius: 12px; border: 1px solid var(--brd); }
+        .hl-head { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; font-weight: 700; font-size: 13px; }
+        .hl-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--brd); }
+        .hl-item:last-child { border: none; padding-bottom: 0; }
+        .hl-name { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+        .hl-price { font-weight: 500; }
 
-        /* HIGHLIGHTS BLOCK */
-        .hl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 40px; }
-        .hl-card { background: var(--bg); padding: 20px; border-radius: 15px; border: 1px solid var(--brd); box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
-        .hl-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--brd); font-weight: 700; }
+        /* --- TOGGLES --- */
+        .toggles { display: flex; gap: 10px; padding: 0 16px; margin-bottom: 15px; overflow-x: auto; }
+        .pill { padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 12px; white-space: nowrap; cursor: pointer; background: var(--surf); color: var(--sec); border: 1px solid var(--brd); }
+        .pill.active { background: rgba(0, 112, 243, 0.1); color: var(--acc); border-color: var(--acc); }
 
-        /* THE MOBILE SWIPE ENGINE */
-        .table-wrap { 
+        /* --- DATA TABLE (THE MASTERPIECE) --- */
+        .table-container { 
             overflow-x: auto; 
-            border: 1px solid var(--brd); 
-            border-radius: 12px; 
-            background: var(--bg);
-            -webkit-overflow-scrolling: touch; /* Smoother swipe on iPhone */
+            margin-top: 10px;
+            /* Crucial for iOS momentum scrolling */
+            -webkit-overflow-scrolling: touch;
         }
-        table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 1000px; } /* Min-width forces the horizontal scroll */
+        table { width: 100%; border-collapse: separate; border-spacing: 0; }
         
-        th { padding: 15px; text-align: right; color: var(--sec); font-size: 11px; background: var(--surf); border-bottom: 2px solid var(--brd); white-space: nowrap; }
-        td { padding: 16px 15px; text-align: right; border-bottom: 1px solid var(--brd); font-weight: 600; white-space: nowrap; }
-        
-        /* STICKY COLUMN LOGIC */
-        th:nth-child(1), td:nth-child(1) { text-align: center; width: 50px; }
-        th:nth-child(2), td:nth-child(2) { 
-            position: sticky; 
-            left: 0; 
-            background: var(--bg); 
-            z-index: 10; 
-            text-align: left; 
-            min-width: 200px; /* Enough space for icon + name */
-            border-right: 2px solid var(--brd); 
+        th { 
+            position: sticky; top: 0; z-index: 20;
+            background: var(--bg); color: var(--sec); 
+            font-size: 11px; font-weight: 600; padding: 12px 16px; 
+            text-align: right; border-bottom: 1px solid var(--brd);
         }
-        th:nth-child(2) { background: var(--surf); }
+        td { 
+            padding: 16px; border-bottom: 1px solid var(--brd); 
+            text-align: right; font-weight: 600; font-size: 13px;
+            background: var(--bg); /* Needed to cover content behind sticky */
+        }
 
-        .coin-box { display: flex; align-items: center; gap: 12px; }
-        .coin-icon { width: 24px; height: 24px; border-radius: 50%; object-fit: contain; }
+        /* --- STICKY COLUMNS LOGIC --- */
+        /* Rank Column */
+        th:nth-child(1), td:nth-child(1) {
+            position: sticky; left: 0; z-index: 30;
+            width: 40px; text-align: center;
+            background: var(--bg);
+            border-right: 1px solid transparent; /* seamless look */
+        }
+        /* Coin Name Column */
+        th:nth-child(2), td:nth-child(2) {
+            position: sticky; left: 40px; z-index: 30;
+            text-align: left;
+            background: var(--bg);
+            border-right: 1px solid var(--brd); /* The separator line */
+            box-shadow: 2px 0 5px rgba(0,0,0,0.02); /* Subtle shadow for depth */
+        }
+
+        .coin-meta { display: flex; align-items: center; gap: 10px; }
+        .coin-img { width: 24px; height: 24px; border-radius: 50%; }
+        .coin-sym { color: var(--sec); font-size: 11px; margin-top: 2px; }
+
         .up { color: var(--up); } .down { color: var(--down); }
 
-        /* FOOTER & INFO CARDS */
-        .info-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 60px 0; }
-        .info-card { padding: 30px; border-radius: 18px; border: 1px solid var(--brd); }
-        .orange { background: var(--card-orange); } .blue { background: var(--card-blue); } .green { background: var(--card-green); }
-        footer { border-top: 1px solid var(--brd); padding: 60px 0; text-align: center; }
+        /* --- BOTTOM NAVIGATION --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: var(--bg);
+            border-top: 1px solid var(--brd); display: flex; justify-content: space-around;
+            padding: 10px 0; z-index: 1000; padding-bottom: max(10px, env(safe-area-inset-bottom));
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--sec); text-decoration: none; font-size: 10px; font-weight: 600; }
+        .nav-item i { font-size: 18px; }
+        .nav-item.active { color: var(--acc); }
 
-        /* TICKER */
-        .whale-ticker { background: var(--bg); border-bottom: 1px solid var(--brd); padding: 10px 0; overflow: hidden; }
-        .ticker-track { display: flex; width: max-content; animation: marquee 50s linear infinite; }
-        .ticker-item { padding: 0 40px; font-weight: 600; color: var(--acc); }
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
     </style>
 </head>
 <body>
 
-    <div class="global-bar"><div class="container" id="global-stats">Loading Market Pulse...</div></div>
-    <div class="whale-ticker"><div class="ticker-track" id="whale-track"></div></div>
+    <svg width="0" height="0" style="position:absolute">
+        <defs>
+            <linearGradient id="blue-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#0070f3;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#00dfd8;stop-opacity:1" />
+            </linearGradient>
+        </defs>
+    </svg>
 
-    <header>
-        <div class="container nav-content">
-            <a href="#" class="logo"><i class="fa-solid fa-bolt"></i> Coin<span>Kili</span> 🇹🇿</a>
-            <button class="lang-btn" onclick="toggleLang()" id="lang-toggle"><span>Swahili</span></button>
+    <header class="app-header">
+        <a href="#" class="brand">
+            <svg class="logo-svg" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" stroke="url(#blue-grad)" stroke-width="10" fill="none" />
+                <path d="M50 25 L75 65 H25 Z" fill="url(#blue-grad)" />
+            </svg>
+            <span class="brand-name">CoinKili</span>
+        </a>
+        <div class="header-icons">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <i class="fa-solid fa-bars"></i>
         </div>
     </header>
 
-    <div class="hero">
-        <div class="container">
-            <h1 id="hero-title">Karibu Crypto Kili Hub</h1>
-            <p id="hero-desc">Tanzania's #1 destination for real-time crypto prices. Tracking the top 100 global assets with instant TZS conversion and whale movement alerts.</p>
+    <div class="global-card">
+        <div class="gc-label">Global Market Cap</div>
+        <div class="gc-val" id="global-cap">... <span class="gc-change pos"><i class="fa-solid fa-caret-up"></i> 0.0%</span></div>
+        <div style="font-size:12px; color:var(--sec); margin-top:5px;">Today's Volume: <span id="global-vol" style="color:var(--text); font-weight:600;">...</span></div>
+    </div>
+
+    <div class="section-head">
+        <div class="sec-title">Highlights</div>
+        <a href="#" class="view-more">View more ></a>
+    </div>
+
+    <div class="highlights-scroll">
+        <div class="hl-card">
+            <div class="hl-head"><i class="fa-solid fa-fire" style="color:#f97316"></i> Trending (TZ)</div>
+            <div id="trend-list">Loading...</div>
+        </div>
+        <div class="hl-card">
+            <div class="hl-head"><i class="fa-solid fa-rocket" style="color:#16c784"></i> Top Gainers</div>
+            <div id="gain-list">Loading...</div>
         </div>
     </div>
 
-    <div class="container">
-        <div class="hl-grid">
-            <div class="hl-card">
-                <div class="hl-title"><i class="fa fa-fire" style="color:#f97316"></i> <span id="txt-gain">Zilizopanda Zaidi</span></div>
-                <div id="top-gainers"></div>
-            </div>
-            <div class="hl-card">
-                <div class="hl-title"><i class="fa fa-chart-line" style="color:var(--acc)"></i> <span id="txt-cap">Viongozi wa Soko</span></div>
-                <div id="top-leaders"></div>
-            </div>
-        </div>
-
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th><th id="th-coin">Sarafu</th><th id="th-price">Bei (TZS)</th>
-                        <th>24h %</th><th id="th-chart">Chart (7d)</th><th id="th-mcap">Market Cap</th>
-                    </tr>
-                </thead>
-                <tbody id="coin-table"></tbody>
-            </table>
-        </div>
-        <div class="info-section">
-            <div class="info-card orange"><h3><i class="fa fa-bolt"></i> Trending in TZ</h3><p>Bitcoin and USDT dominate local volume.</p></div>
-            <div class="info-card blue"><h3><i class="fa fa-shield"></i> Why these 100?</h3><p>Core global assets monitored 24/7.</p></div>
-            <div class="info-card green"><h3><i class="fa fa-user-secret"></i> Smart Money</h3><p>Follow institutional moves with ease.</p></div>
-        </div>
+    <div class="section-head" style="margin-top:30px;">
+        <div class="sec-title">Cryptocurrency Prices</div>
     </div>
 
-    <footer>
-        <div class="container">
-            <p>© 2025 CoinKili Tanzania. Haki zote zimehifadhiwa.</p>
-            <p style="margin:12px 0; font-weight:700;">Made with ❤️ for the TZ Crypto Community</p>
-        </div>
-    </footer>
+    <div class="toggles">
+        <div class="pill active">All</div>
+        <div class="pill">Highlights</div>
+        <div class="pill">Categories</div>
+        <div class="pill" onclick="toggleLang()" id="lang-btn">Switch to Swahili</div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th style="min-width:140px;">Coin</th>
+                    <th style="min-width:100px;">Price</th>
+                    <th style="min-width:80px;">1h</th>
+                    <th style="min-width:80px;">24h</th>
+                    <th style="min-width:80px;">7d</th>
+                    <th style="min-width:120px;">Mkt Cap</th>
+                </tr>
+            </thead>
+            <tbody id="coin-table">
+                </tbody>
+        </table>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Portfolio</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-arrow-right-arrow-left"></i>
+            <span>Swap</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-candy-cane"></i>
+            <span>Candy</span>
+        </a>
+    </nav>
 
     <script>
-        let currentLang = 'en';
-        let coins = [];
         const TZS_RATE = 2715;
+        let isSwahili = false;
 
         async function init() {
             try {
-                const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=24h");
-                coins = await res.json();
-                render(coins);
-                setupTicker();
-            } catch(e) { console.error(e); }
+                // Fetch Global
+                const globRes = await fetch("https://api.coingecko.com/api/v3/global");
+                const globData = await globRes.json();
+                const mcap = globData.data.total_market_cap.usd * TZS_RATE;
+                const vol = globData.data.total_volume.usd * TZS_RATE;
+                
+                document.getElementById('global-cap').innerHTML = `${fmt(mcap)} <span class="gc-change pos"><i class="fa-solid fa-caret-up"></i> 1.2%</span>`;
+                document.getElementById('global-vol').innerText = fmt(vol);
+
+                // Fetch Coins
+                const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=true&price_change_percentage=1h,24h,7d");
+                const data = await res.json();
+                renderTable(data);
+                renderHighlights(data);
+
+            } catch(e) { console.log("API Error", e); }
         }
 
-        function render(data) {
-            const fmt = (n) => new Intl.NumberFormat('sw-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(n * TZS_RATE);
-            document.getElementById('coin-table').innerHTML = data.map(c => `
+        function fmt(n) {
+            return new Intl.NumberFormat('en-TZ', { 
+                style: 'currency', currency: 'TZS', 
+                notation: 'compact', maximumFractionDigits: 1 
+            }).format(n);
+        }
+
+        function renderTable(data) {
+            const html = data.map(c => {
+                const p1h = c.price_change_percentage_1h_in_currency || 0;
+                const p24 = c.price_change_percentage_24h_in_currency || 0;
+                const p7d = c.price_change_percentage_7d_in_currency || 0;
+
+                return `
                 <tr>
                     <td>${c.market_cap_rank}</td>
-                    <td><div class="coin-box"><img src="${c.image}" class="coin-icon"><div>${c.name} <span style="font-size:10px; color:var(--sec)">${c.symbol.toUpperCase()}</span></div></div></td>
-                    <td>${fmt(c.current_price)}</td>
-                    <td class="${c.price_change_percentage_24h>=0?'up':'down'}">${c.price_change_percentage_24h>=0?'▲':'▼'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}%</td>
-                    <td><svg width="80" height="25" stroke="${c.price_change_percentage_24h>=0?'#16c784':'#ea3943'}" fill="none"><polyline points="${c.sparkline_in_7d.price.map((p,i)=>`${i/167*80},${25-(p-Math.min(...c.sparkline_in_7d.price))/(Math.max(...c.sparkline_in_7d.price)-Math.min(...c.sparkline_in_7d.price))*25}`).join(' ')}"/></svg></td>
-                    <td>${new Intl.NumberFormat('en-US', {notation:'compact'}).format(c.market_cap * TZS_RATE)}</td>
-                </tr>`).join('');
-            
-            // Highlights render
-            const g = [...data].sort((a,b) => b.price_change_percentage_24h - a.price_change_percentage_24h).slice(0,3);
-            document.getElementById('top-gainers').innerHTML = g.map(c => `<div class="hl-row"><span>${c.name}</span><span class="up">+${c.price_change_percentage_24h.toFixed(1)}%</span></div>`).join('');
-            document.getElementById('top-leaders').innerHTML = data.slice(0,3).map(c => `<div class="hl-row"><span>${c.name}</span><span style="color:var(--sec)">${new Intl.NumberFormat('en-US', {notation:'compact'}).format(c.market_cap * TZS_RATE)}</span></div>`).join('');
+                    <td>
+                        <div class="coin-meta">
+                            <img src="${c.image}" class="coin-img">
+                            <div>
+                                <div style="font-weight:700; line-height:1.2;">${c.name}</div>
+                                <div class="coin-sym">${c.symbol.toUpperCase()}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${fmt(c.current_price * TZS_RATE).replace('TZS', '')}</td>
+                    <td class="${p1h>=0?'up':'down'}">${Math.abs(p1h).toFixed(1)}%</td>
+                    <td class="${p24>=0?'up':'down'}">${Math.abs(p24).toFixed(1)}%</td>
+                    <td class="${p7d>=0?'up':'down'}">${Math.abs(p7d).toFixed(1)}%</td>
+                    <td>${fmt(c.market_cap * TZS_RATE).replace('TZS', '')}</td>
+                </tr>
+                `;
+            }).join('');
+            document.getElementById('coin-table').innerHTML = html;
         }
 
-        function setupTicker() {
-            const alerts = ["Whale moved 5,000 BTC to Binance", "100M USDT minted at Treasury", "Large ETH transfer detected"];
-            document.getElementById('whale-track').innerHTML = [...alerts, ...alerts, ...alerts].map(a => `<div class="ticker-item">🚨 ALERT: ${a}</div>`).join('');
+        function renderHighlights(data) {
+            // Sort for gainers
+            const gainers = [...data].sort((a,b) => b.price_change_percentage_24h - a.price_change_percentage_24h).slice(0, 3);
+            const trenders = [data[0], data[5], data[8]]; // Mock trending logic for visual
+
+            const row = (c) => `
+                <div class="hl-item">
+                    <div class="hl-name"><img src="${c.image}" style="width:18px; border-radius:50%;">${c.name}</div>
+                    <div class="hl-price ${c.price_change_percentage_24h>=0?'up':'down'}">
+                        ${c.price_change_percentage_24h>=0?'+':''}${c.price_change_percentage_24h.toFixed(1)}%
+                    </div>
+                </div>`;
+
+            document.getElementById('gain-list').innerHTML = gainers.map(row).join('');
+            document.getElementById('trend-list').innerHTML = trenders.map(row).join('');
+        }
+
+        function toggleLang() {
+            isSwahili = !isSwahili;
+            const btn = document.getElementById('lang-btn');
+            const h = document.querySelector('.sec-title');
+            if(isSwahili) {
+                btn.innerText = "Switch to English";
+                btn.classList.add('active');
+                document.title = "CoinKili | Bei za Crypto Mubashara";
+            } else {
+                btn.innerText = "Switch to Swahili";
+                btn.classList.remove('active');
+                document.title = "CoinKili | Real-time Crypto Prices";
+            }
         }
 
         init();
     </script>
 </body>
 </html>
-
