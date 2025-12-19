@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoinKili Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --bg: #ffffff; --text: #0f172a; --sec: #64748b; --acc: #0070f3; --brd: #e2e8f0; --surf: #f8fafc; }
+        @media (prefers-color-scheme: dark) { :root { --bg: #0b1221; --text: #ffffff; --sec: #94a3b8; --brd: #1e293b; --surf: #151e32; } }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 80px; }
+
+        .menu-head { padding: 16px; border-bottom: 1px solid var(--brd); display: flex; justify-content: space-between; align-items: center; }
+        .menu-brand { font-weight: 800; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+        .close-icon { font-size: 20px; color: var(--sec); text-decoration: none; }
+
+        .menu-list { list-style: none; padding: 0; }
+        .menu-item { 
+            padding: 16px; border-bottom: 1px solid var(--brd); 
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 600; font-size: 15px; cursor: pointer;
+        }
+        .menu-item i { color: var(--sec); font-size: 12px; }
+
+        /* Settings Area */
+        .settings-grid { 
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 20px 16px; 
+        }
+        .setting-btn {
+            border: 1px solid var(--brd); border-radius: 8px;
+            padding: 12px; text-align: center; font-weight: 600; font-size: 13px;
+            background: var(--bg); color: var(--text); cursor: pointer;
+        }
+        .setting-btn.active { border-color: var(--acc); color: var(--acc); background: rgba(0, 112, 243, 0.05); }
+
+        .login-area { padding: 0 16px 20px; }
+        .login-btn { 
+            width: 100%; background: #16c784; color: white; padding: 14px; 
+            border: none; border-radius: 8px; font-weight: 700; font-size: 15px; 
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: var(--bg);
+            border-top: 1px solid var(--brd); display: flex; justify-content: space-around;
+            padding: 10px 0; padding-bottom: max(10px, env(safe-area-inset-bottom));
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--sec); text-decoration: none; font-size: 10px; font-weight: 600; }
+        .nav-item.active { color: var(--acc); }
+        .nav-item i { font-size: 18px; }
+    </style>
+</head>
+<body>
+
+    <div class="menu-head">
+        <div class="menu-brand"><i class="fa-solid fa-circle-nodes" style="color:var(--acc)"></i> CoinKili Menu</div>
+        <a href="index.html" class="close-icon"><i class="fa-solid fa-xmark"></i></a>
+    </div>
+
+    <ul class="menu-list">
+        <li class="menu-item">Cryptocurrencies <i class="fa-solid fa-plus"></i></li>
+        <li class="menu-item">Exchanges <i class="fa-solid fa-plus"></i></li>
+        <li class="menu-item">NFT <i class="fa-solid fa-plus"></i></li>
+        <li class="menu-item">Learn <i class="fa-solid fa-plus"></i></li>
+        <li class="menu-item" style="color:#d946ef"><i class="fa-solid fa-candy-cane" style="margin-right:8px;"></i> My Candies</li>
+        <li class="menu-item" style="color:#eab308"><i class="fa-solid fa-star" style="margin-right:8px;"></i> My Portfolio</li>
+    </ul>
+
+    <div class="login-area">
+        <button class="login-btn">Create an account</button>
+        <button style="width:100%; background:transparent; border:1px solid var(--brd); margin-top:10px; padding:12px; border-radius:8px; font-weight:700;">Log in</button>
+    </div>
+
+    <div class="settings-grid">
+        <div class="setting-btn active" id="btn-en">English</div>
+        <div class="setting-btn" id="btn-sw">Swahili</div>
+        <div class="setting-btn"><i class="fa-solid fa-gear"></i></div>
+        
+        <div class="setting-btn active" id="btn-tzs">TZS</div>
+        <div class="setting-btn" id="btn-usd">USD</div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i><span>Home</span>
+        </a>
+        <a href="portfolio.html" class="nav-item">
+            <i class="fa-solid fa-chart-pie"></i><span>Portfolio</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-arrow-right-arrow-left"></i><span>Swap</span>
+        </a>
+        <a href="candy.html" class="nav-item">
+            <i class="fa-solid fa-candy-cane"></i><span>Candy</span>
+        </a>
+        <a href="menu.html" class="nav-item active">
+            <i class="fa-solid fa-bars"></i><span>Menu</span>
+        </a>
+    </nav>
+
+    <script>
+        // Simple logic to show active state (Functionality would require backend/cookies)
+        document.getElementById('btn-sw').addEventListener('click', function() {
+            alert('Swahili Mode Activated! (Logic to save preference goes here)');
+            this.classList.add('active');
+            document.getElementById('btn-en').classList.remove('active');
+        });
+
+        document.getElementById('btn-usd').addEventListener('click', function() {
+            alert('Currency switched to USD');
+            this.classList.add('active');
+            document.getElementById('btn-tzs').classList.remove('active');
+        });
+    </script>
+</body>
+</html>
