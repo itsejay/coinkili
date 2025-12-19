@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoinKili Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reusing Core CoinKili Styles for Consistency */
+        :root { --bg: #ffffff; --text: #0f172a; --sec: #64748b; --acc: #0070f3; --brd: #e2e8f0; --surf: #f8fafc; }
+        @media (prefers-color-scheme: dark) { :root { --bg: #0b1221; --text: #ffffff; --sec: #94a3b8; --brd: #1e293b; --surf: #151e32; } }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 80px; }
+
+        /* Header */
+        .page-header { padding: 16px; border-bottom: 1px solid var(--brd); display: flex; align-items: center; justify-content: space-between; }
+        .ph-title { font-weight: 700; font-size: 18px; }
+        .close-btn { font-size: 20px; color: var(--sec); text-decoration: none; }
+
+        /* Content */
+        .port-container { max-width: 500px; margin: 0 auto; padding: 30px 20px; text-align: center; }
+        .gecko-mascot { font-size: 40px; margin-bottom: 15px; display: block; } 
+        .port-h1 { font-size: 24px; font-weight: 800; margin-bottom: 10px; }
+        .port-p { color: var(--sec); font-size: 14px; line-height: 1.5; margin-bottom: 30px; }
+
+        /* Auth Buttons */
+        .auth-btn { 
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; padding: 14px; margin-bottom: 12px;
+            border: 1px solid var(--brd); border-radius: 8px;
+            background: var(--bg); color: var(--text);
+            font-weight: 600; font-size: 14px; cursor: pointer;
+        }
+        .auth-btn.primary { background: var(--acc); color: white; border: none; }
+        .auth-btn:active { transform: scale(0.98); }
+        
+        .divider { margin: 20px 0; color: var(--sec); font-size: 12px; position: relative; }
+        .divider::before, .divider::after { content: ""; position: absolute; top: 50%; width: 40%; height: 1px; background: var(--brd); }
+        .divider::before { left: 0; } .divider::after { right: 0; }
+
+        /* Banner Card */
+        .banner { 
+            background: linear-gradient(135deg, #16c784 0%, #0ea5e9 100%); 
+            padding: 20px; border-radius: 12px; color: white; 
+            text-align: left; margin-top: 30px; position: relative; overflow: hidden;
+        }
+        .banner h3 { font-size: 18px; font-weight: 800; margin-bottom: 5px; z-index: 2; position: relative; }
+        .banner p { font-size: 12px; opacity: 0.9; margin-bottom: 15px; z-index: 2; position: relative; }
+        .banner-btn { 
+            background: #000; color: white; padding: 8px 16px; 
+            border-radius: 6px; font-size: 12px; font-weight: 700; 
+            display: inline-block; text-decoration: none;
+        }
+
+        /* Bottom Nav (Consistent) */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: var(--bg);
+            border-top: 1px solid var(--brd); display: flex; justify-content: space-around;
+            padding: 10px 0; padding-bottom: max(10px, env(safe-area-inset-bottom));
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--sec); text-decoration: none; font-size: 10px; font-weight: 600; }
+        .nav-item.active { color: var(--acc); }
+        .nav-item i { font-size: 18px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <div class="ph-title">Portfolio</div>
+        <a href="index.html" class="close-btn"><i class="fa-solid fa-xmark"></i></a>
+    </div>
+
+    <div class="port-container">
+        <span class="gecko-mascot">🦎</span>
+        <h1 class="port-h1">Welcome to CoinKili</h1>
+        <p class="port-p">Stay updated on your coins and monitor portfolio performance in TZS 🇹🇿.</p>
+
+        <button class="auth-btn"><i class="fa-brands fa-google"></i> Continue with Google</button>
+        <button class="auth-btn"><i class="fa-brands fa-apple"></i> Continue with Apple</button>
+        
+        <div class="divider">or</div>
+        
+        <button class="auth-btn primary">Continue with Email</button>
+
+        <div class="banner">
+            <h3>Get Price Alerts 🔔</h3>
+            <p>Never miss a pump. Track TZS prices instantly.</p>
+            <a href="#" class="banner-btn"><i class="fa-brands fa-google-play"></i> Get App</a>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i><span>Home</span>
+        </a>
+        <a href="portfolio.html" class="nav-item active">
+            <i class="fa-solid fa-chart-pie"></i><span>Portfolio</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-arrow-right-arrow-left"></i><span>Swap</span>
+        </a>
+        <a href="candy.html" class="nav-item"> <i class="fa-solid fa-candy-cane"></i><span>Candy</span>
+        </a>
+        <a href="menu.html" class="nav-item">
+            <i class="fa-solid fa-bars"></i><span>Menu</span>
+        </a>
+    </nav>
+</body>
+</html>
