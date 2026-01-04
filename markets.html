@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoinKili Markets</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --bg: #ffffff; --text: #0f172a; --sec: #64748b; 
+            --acc: #0070f3; --brd: #e2e8f0; --surf: #f8fafc; 
+            --up: #16c784; --down: #ea3943;
+        }
+        @media (prefers-color-scheme: dark) { 
+            :root { 
+                --bg: #0b1221; --text: #ffffff; --sec: #94a3b8; 
+                --brd: #1e293b; --surf: #151e32; 
+            } 
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 90px; }
+
+        /* Header */
+        .page-header { 
+            padding: 16px; border-bottom: 1px solid var(--brd); 
+            display: flex; align-items: center; gap: 15px;
+            position: sticky; top: 0; background: var(--bg); z-index: 100;
+        }
+        .back-btn { font-size: 18px; color: var(--text); text-decoration: none; }
+        .ph-title { font-weight: 800; font-size: 18px; }
+
+        /* Tab Navigation */
+        .tab-bar { 
+            display: flex; padding: 10px 16px; gap: 10px; 
+            background: var(--surf); overflow-x: auto;
+            border-bottom: 1px solid var(--brd);
+        }
+        .tab { 
+            padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; 
+            white-space: nowrap; cursor: pointer; color: var(--sec); border: 1px solid transparent;
+        }
+        .tab.active { background: var(--bg); color: var(--text); border-color: var(--brd); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .tab.green-active { color: var(--up); border-color: var(--up); background: rgba(22, 199, 132, 0.1); }
+        .tab.red-active { color: var(--down); border-color: var(--down); background: rgba(234, 57, 67, 0.1); }
+
+        /* List Container */
+        .list-container { padding: 0 16px; }
+        .market-item { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 16px 0; border-bottom: 1px solid var(--brd); 
+        }
+        .item-left { display: flex; align-items: center; gap: 12px; }
+        .rank { font-size: 12px; color: var(--sec); width: 20px; text-align: center; }
+        .coin-icon { width: 32px; height: 32px; border-radius: 50%; }
+        .coin-name { font-weight: 700; font-size: 14px; }
+        .coin-sym { font-size: 11px; color: var(--sec); }
+        
+        .item-right { text-align: right; }
+        .price { font-weight: 700; font-size: 14px; }
+        .change { font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+        .up { color: var(--up); } .down { color: var(--down); }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: var(--bg);
+            border-top: 1px solid var(--brd); display: flex; justify-content: space-around;
+            padding: 10px 0; padding-bottom: max(10px, env(safe-area-inset-bottom));
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--sec); text-decoration: none; font-size: 10px; font-weight: 600; }
+        .nav-item.active { color: var(--acc); }
+        .nav-item i { font-size: 18px; }
+
+        /* Loading State */
+        .loader { text-align: center; padding: 40px; color: var(--sec); font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+        <div class="ph-title">Market Data</div>
+    </div>
+
+    <div class="tab-bar">
+        <div class="tab active" onclick="switchTab('gainers', this)">🚀 Top Gainers</div>
+        <div class="tab" onclick="switchTab('losers', this)">📉 Top Losers</div>
+        <div class="tab" onclick="switchTab('trending', this)">🔥 Trending</div>
+    </div>
+
+    <div class="list-container" id="market-list">
+        <div class="loader"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading Data...</div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i><span>Home</span>
+        </a>
+        <a href="portfolio.html" class="nav-item">
+            <i class="fa-solid fa-chart-pie"></i><span>Portfolio</span>
+        </a>
+        <a href="swap.html" class="nav-item">
+            <i class="fa-solid fa-arrow-right-arrow-left"></i><span>Swap</span>
+        </a>
+        <a href="candy.html" class="nav-item">
+            <i class="fa-solid fa-candy-cane"></i><span>Candy</span>
+        </a>
+        <a href="menu.html" class="nav-item">
+            <i class="fa-solid fa-bars"></i><span>Menu</span>
+        </a>
+    </nav>
+
+    <script>
+        let allCoins = [];
+        const TZS_RATE = 2715;
+
+        async function init() {
+            try {
+                // Fetch top 100 coins
+                const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h");
+                allCoins = await res.json();
+                
+                // Default view: Gainers
+                renderList(getGainers());
+            } catch(e) {
+                document.getElementById('market-list').innerHTML = '<div class="loader" style="color:red">Failed to load data. API limit reached?</div>';
+            }
+        }
+
+        function getGainers() {
+            return [...allCoins].sort((a,b) => b.price_change_percentage_24h - a.price_change_percentage_24h).slice(0, 50);
+        }
+
+        function getLosers() {
+            return [...allCoins].sort((a,b) => a.price_change_percentage_24h - b.price_change_percentage_24h).slice(0, 50);
+        }
+
+        // Simulating "Trending" by picking high volume or random for now
+        function getTrending() {
+            return [...allCoins].sort(() => 0.5 - Math.random()).slice(0, 20); 
+        }
+
+        function renderList(data) {
+            const container = document.getElementById('market-list');
+            
+            const html = data.map(c => {
+                const isUp = c.price_change_percentage_24h >= 0;
+                const priceTZS = new Intl.NumberFormat('en-TZ', { maximumFractionDigits: 0 }).format(c.current_price * TZS_RATE);
+                
+                return `
+                <div class="market-item">
+                    <div class="item-left">
+                        <span class="rank">${c.market_cap_rank}</span>
+                        <img src="${c.image}" class="coin-icon">
+                        <div>
+                            <div class="coin-name">${c.name}</div>
+                            <div class="coin-sym">${c.symbol.toUpperCase()}</div>
+                        </div>
+                    </div>
+                    <div class="item-right">
+                        <div class="price">TSh ${priceTZS}</div>
+                        <div class="change ${isUp ? 'up' : 'down'}">
+                            ${isUp ? '<i class="fa-solid fa-caret-up"></i>' : '<i class="fa-solid fa-caret-down"></i>'}
+                            ${Math.abs(c.price_change_percentage_24h).toFixed(2)}%
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = html;
+        }
+
+        function switchTab(type, btn) {
+            // Reset tabs
+            document.querySelectorAll('.tab').forEach(t => {
+                t.className = 'tab';
+            });
+
+            // Set active style
+            if(type === 'gainers') btn.classList.add('tab', 'green-active');
+            else if(type === 'losers') btn.classList.add('tab', 'red-active');
+            else btn.classList.add('tab', 'active');
+
+            // Render content
+            document.getElementById('market-list').innerHTML = '<div class="loader">Sorting...</div>';
+            setTimeout(() => {
+                if(type === 'gainers') renderList(getGainers());
+                else if(type === 'losers') renderList(getLosers());
+                else renderList(getTrending());
+            }, 100);
+        }
+
+        init();
+    </script>
+</body>
+</html>
