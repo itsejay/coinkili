@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoinKili Candies</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --bg: #ffffff; --text: #0f172a; --sec: #64748b; --acc: #0070f3; --brd: #e2e8f0; --surf: #f8fafc; --gold: #F59E0B; }
+        @media (prefers-color-scheme: dark) { :root { --bg: #0b1221; --text: #ffffff; --sec: #94a3b8; --brd: #1e293b; --surf: #151e32; } }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--surf); color: var(--text); padding-bottom: 80px; }
+
+        /* HEADER */
+        .candy-header { 
+            background: linear-gradient(135deg, #0070f3 0%, #00dfd8 100%); 
+            padding: 30px 20px 60px; color: white; text-align: center;
+            border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
+        }
+        .candy-balance { font-size: 36px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
+        .candy-sub { opacity: 0.9; font-size: 13px; font-weight: 600; }
+
+        /* MAIN CONTAINER (Overlapping header) */
+        .main-container { max-width: 600px; margin: -40px auto 0; padding: 0 16px; }
+
+        /* DAILY CLAIM CARD */
+        .claim-card { background: var(--bg); border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center; border: 1px solid var(--brd); }
+        .streak-title { font-weight: 700; color: var(--text); margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 20px; }
+        .day-box { 
+            background: var(--surf); border-radius: 8px; padding: 8px 2px; 
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+            font-size: 10px; color: var(--sec); border: 1px solid var(--brd);
+        }
+        .day-box.active { border-color: var(--gold); background: #FFFBEB; color: var(--gold); font-weight: 700; }
+        .candy-amt { font-weight: 700; font-size: 11px; }
+
+        .claim-btn { 
+            background: var(--gold); color: #fff; width: 100%; padding: 14px; 
+            border: none; border-radius: 10px; font-size: 16px; font-weight: 700; 
+            cursor: pointer; box-shadow: 0 4px 0 #D97706; transition: transform 0.1s;
+        }
+        .claim-btn:active { transform: translateY(4px); box-shadow: none; }
+
+        /* REWARDS SECTION */
+        .rewards-head { margin: 30px 0 15px; font-weight: 800; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+        .reward-item { 
+            display: flex; gap: 15px; background: var(--bg); padding: 15px; 
+            border-radius: 12px; border: 1px solid var(--brd); margin-bottom: 12px; 
+        }
+        .reward-img { width: 60px; height: 60px; background: var(--surf); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .reward-info h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+        .reward-info p { font-size: 11px; color: var(--sec); margin-bottom: 8px; }
+        .cost-pill { display: inline-block; background: var(--surf); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; color: var(--acc); border: 1px solid var(--brd); }
+
+        /* BOTTOM NAV */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg);
+            border-top: 1px solid var(--brd); display: flex; justify-content: space-around;
+            padding: 10px 0; padding-bottom: max(10px, env(safe-area-inset-bottom)); z-index: 1000;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--sec); text-decoration: none; font-size: 10px; font-weight: 600; }
+        .nav-item.active { color: var(--acc); }
+        .nav-item i { font-size: 18px; }
+    </style>
+</head>
+<body>
+
+    <div class="candy-header">
+        <div class="candy-sub">Current Balance</div>
+        <div class="candy-balance">
+            <i class="fa-solid fa-candy-cane"></i> 0
+        </div>
+        <div style="font-size:12px; margin-top:5px; opacity:0.8;">Collect candies daily to redeem exclusive TZ rewards!</div>
+    </div>
+
+    <div class="main-container">
+        <div class="claim-card">
+            <div class="streak-title">
+                <span>Daily Login Streak</span>
+                <span style="font-size:12px; color:var(--sec)"><i class="fa-solid fa-fire" style="color:#ef4444"></i> 0 Days</span>
+            </div>
+            
+            <div class="days-grid">
+                <div class="day-box active">
+                    <span>Day 1</span>
+                    <i class="fa-solid fa-candy-cane" style="color:var(--gold)"></i>
+                    <span class="candy-amt">+10</span>
+                </div>
+                <div class="day-box"><span>Day 2</span><i class="fa-solid fa-check" style="opacity:0.3"></i><span class="candy-amt">+20</span></div>
+                <div class="day-box"><span>Day 3</span><i class="fa-solid fa-check" style="opacity:0.3"></i><span class="candy-amt">+30</span></div>
+                <div class="day-box"><span>Day 4</span><i class="fa-solid fa-check" style="opacity:0.3"></i><span class="candy-amt">+40</span></div>
+                <div class="day-box"><span>Day 5</span><i class="fa-solid fa-check" style="opacity:0.3"></i><span class="candy-amt">+50</span></div>
+                <div class="day-box"><span>Day 6</span><i class="fa-solid fa-check" style="opacity:0.3"></i><span class="candy-amt">+60</span></div>
+                <div class="day-box"><span>Day 7</span><i class="fa-solid fa-gift" style="opacity:0.3"></i><span class="candy-amt">+100</span></div>
+            </div>
+
+            <button class="claim-btn" onclick="claimCandy(this)">Collect 10 Candies</button>
+        </div>
+
+        <div class="rewards-head">
+            <i class="fa-solid fa-gift" style="color:var(--acc)"></i> Redeem Rewards
+        </div>
+
+        <div class="reward-item">
+            <div class="reward-img">📘</div>
+            <div class="reward-info">
+                <h4>Crypto for Beginners (PDF)</h4>
+                <p>Learn the basics of Bitcoin and Blockchain in Swahili.</p>
+                <div class="cost-pill">200 Candies</div>
+            </div>
+        </div>
+
+        <div class="reward-item">
+            <div class="reward-img">🧢</div>
+            <div class="reward-info">
+                <h4>CoinKili Cap (Merch)</h4>
+                <p>Official branded cap. Pick up in Dar es Salaam.</p>
+                <div class="cost-pill">800 Candies</div>
+            </div>
+        </div>
+
+        <div class="reward-item">
+            <div class="reward-img">💸</div>
+            <div class="reward-info">
+                <h4>10% Off Fees Coupon</h4>
+                <p>Get a discount on your next Swap transaction.</p>
+                <div class="cost-pill">400 Candies</div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i><span>Home</span>
+        </a>
+        <a href="portfolio.html" class="nav-item">
+            <i class="fa-solid fa-chart-pie"></i><span>Portfolio</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-arrow-right-arrow-left"></i><span>Swap</span>
+        </a>
+        <a href="candy.html" class="nav-item active">
+            <i class="fa-solid fa-candy-cane"></i><span>Candy</span>
+        </a>
+        <a href="menu.html" class="nav-item">
+            <i class="fa-solid fa-bars"></i><span>Menu</span>
+        </a>
+    </nav>
+
+    <script>
+        function claimCandy(btn) {
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Collected!';
+            btn.style.background = '#16c784'; // Green color
+            btn.style.boxShadow = 'none';
+            btn.style.transform = 'translateY(4px)';
+            
+            // Update balance visual
+            document.querySelector('.candy-balance').innerHTML = '<i class="fa-solid fa-candy-cane"></i> 10';
+            
+            // Simple alert
+            setTimeout(() => {
+                alert("Sweet! +10 Candies added to your jar.");
+            }, 300);
+        }
+    </script>
+</body>
+</html>
