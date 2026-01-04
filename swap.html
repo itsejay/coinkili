@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoinKili Swap</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --bg: #ffffff; --text: #0f172a; --sec: #64748b; 
+            --acc: #0070f3; --brd: #e2e8f0; --surf: #f8fafc; 
+            --input-bg: #f1f5f9;
+        }
+        @media (prefers-color-scheme: dark) { 
+            :root { 
+                --bg: #0b1221; --text: #ffffff; --sec: #94a3b8; 
+                --brd: #1e293b; --surf: #151e32; --input-bg: #1e293b;
+            } 
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--surf); color: var(--text); padding-bottom: 90px; }
+
+        /* Header */
+        .page-header { 
+            background: var(--bg); padding: 16px; 
+            border-bottom: 1px solid var(--brd); 
+            display: flex; justify-content: space-between; align-items: center; 
+            position: sticky; top: 0; z-index: 100;
+        }
+        .ph-title { font-weight: 800; font-size: 18px; }
+        .ph-icons { display: flex; gap: 20px; color: var(--sec); font-size: 18px; }
+
+        /* Swap Container */
+        .swap-container { max-width: 480px; margin: 20px auto; padding: 0 16px; }
+
+        /* The Swap Card */
+        .swap-card { 
+            background: var(--bg); border-radius: 20px; padding: 16px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid var(--brd); 
+        }
+
+        .input-group { 
+            background: var(--input-bg); border-radius: 16px; padding: 16px; 
+            transition: 0.2s; border: 1px solid transparent;
+        }
+        .input-group:focus-within { border-color: var(--acc); background: var(--bg); }
+
+        .group-label { font-size: 12px; color: var(--sec); font-weight: 600; margin-bottom: 8px; display: flex; justify-content: space-between; }
+        
+        .input-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        
+        /* The Number Input */
+        .token-amount { 
+            background: transparent; border: none; font-size: 28px; font-weight: 700; 
+            color: var(--text); width: 100%; outline: none; 
+        }
+        .token-amount::placeholder { color: var(--sec); opacity: 0.3; }
+
+        /* Coin Selector Chip */
+        .token-select { 
+            background: var(--bg); border: 1px solid var(--brd); border-radius: 24px; 
+            padding: 6px 12px 6px 8px; display: flex; align-items: center; gap: 8px; 
+            font-weight: 700; font-size: 16px; cursor: pointer; white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .token-icon { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; }
+
+        /* Middle Switcher */
+        .switch-row { display: flex; justify-content: center; margin: -12px 0; z-index: 10; position: relative; }
+        .switch-btn { 
+            background: var(--bg); border: 4px solid var(--surf); border-radius: 12px; 
+            width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; color: var(--text); box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .switch-btn:hover { transform: rotate(180deg); transition: 0.3s; color: var(--acc); }
+
+        /* Info Section */
+        .swap-info { margin-top: 16px; padding: 12px; border-radius: 12px; border: 1px solid var(--brd); }
+        .info-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; }
+        .info-label { color: var(--sec); }
+        .info-val { font-weight: 600; }
+        .highlight { color: var(--acc); }
+
+        /* Action Button */
+        .swap-btn { 
+            width: 100%; padding: 16px; margin-top: 16px; border: none; border-radius: 16px; 
+            background: linear-gradient(135deg, #0070f3 0%, #00dfd8 100%); 
+            color: white; font-size: 16px; font-weight: 700; cursor: pointer; 
+            box-shadow: 0 4px 15px rgba(0, 112, 243, 0.2); transition: 0.2s;
+        }
+        .swap-btn:active { transform: scale(0.98); }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: var(--bg);
+            border-top: 1px solid var(--brd); display: flex; justify-content: space-around;
+            padding: 10px 0; padding-bottom: max(10px, env(safe-area-inset-bottom));
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--sec); text-decoration: none; font-size: 10px; font-weight: 600; }
+        .nav-item.active { color: var(--acc); }
+        .nav-item i { font-size: 18px; }
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <div class="ph-title">Swap</div>
+        <div class="ph-icons">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <i class="fa-solid fa-gear"></i>
+        </div>
+    </div>
+
+    <div class="swap-container">
+        <div class="swap-card">
+            
+            <div class="input-group">
+                <div class="group-label"><span>You Pay</span> <span>Balance: 0</span></div>
+                <div class="input-row">
+                    <input type="number" class="token-amount" placeholder="0" id="input-pay" oninput="calcSwap()">
+                    <div class="token-select">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Flag_of_Tanzania.svg" class="token-icon">
+                        TZS <i class="fa-solid fa-chevron-down" style="font-size:10px; margin-left:4px;"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="switch-row">
+                <div class="switch-btn" onclick="flipCurrencies()"><i class="fa-solid fa-arrow-down-up"></i></div>
+            </div>
+
+            <div class="input-group">
+                <div class="group-label"><span>You Receive</span> <span>Balance: 0</span></div>
+                <div class="input-row">
+                    <input type="number" class="token-amount" placeholder="0" id="input-receive" readonly>
+                    <div class="token-select">
+                        <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="token-icon">
+                        USDT <i class="fa-solid fa-chevron-down" style="font-size:10px; margin-left:4px;"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="swap-info">
+                <div class="info-row">
+                    <span class="info-label">Rate</span>
+                    <span class="info-val">1 USDT ≈ 2,715 TZS</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Network Cost</span>
+                    <span class="info-val"><i class="fa-solid fa-gas-pump" style="font-size:10px;"></i> 1,500 TZS</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Slippage Tolerance</span>
+                    <span class="info-val highlight">0.5%</span>
+                </div>
+            </div>
+
+            <button class="swap-btn">Connect Wallet</button>
+
+        </div>
+        
+        <p style="text-align:center; font-size:11px; color:var(--sec); margin-top:20px;">
+            Powered by CoinKili DEX Protocol V1
+        </p>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i><span>Home</span>
+        </a>
+        <a href="portfolio.html" class="nav-item">
+            <i class="fa-solid fa-chart-pie"></i><span>Portfolio</span>
+        </a>
+        <a href="swap.html" class="nav-item active">
+            <i class="fa-solid fa-arrow-right-arrow-left"></i><span>Swap</span>
+        </a>
+        <a href="candy.html" class="nav-item">
+            <i class="fa-solid fa-candy-cane"></i><span>Candy</span>
+        </a>
+        <a href="menu.html" class="nav-item">
+            <i class="fa-solid fa-bars"></i><span>Menu</span>
+        </a>
+    </nav>
+
+    <script>
+        const RATE = 2715; // 1 USDT = 2715 TZS
+
+        function calcSwap() {
+            const pay = document.getElementById('input-pay').value;
+            const receiveBox = document.getElementById('input-receive');
+            
+            if(pay && pay > 0) {
+                // Simple calculation: TZS divided by Rate
+                const result = (pay / RATE).toFixed(2);
+                receiveBox.value = result;
+                
+                // Activate button visual
+                document.querySelector('.swap-btn').innerText = "Swap TZS to USDT";
+            } else {
+                receiveBox.value = "";
+                document.querySelector('.swap-btn').innerText = "Connect Wallet";
+            }
+        }
+
+        function flipCurrencies() {
+            alert("This simulates flipping the pair! (e.g. USDT -> TZS)");
+        }
+    </script>
+</body>
+</html>
